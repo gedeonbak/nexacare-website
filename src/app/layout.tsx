@@ -48,10 +48,7 @@ export const metadata: Metadata = {
   },
 };
 
-// TODO: Replace GA_MEASUREMENT_ID with your actual GA4 Measurement ID
-// Get it from: analytics.google.com → Admin → Data Streams → your stream → Measurement ID
-// Format: G-XXXXXXXXXX
-const GA_MEASUREMENT_ID = "GA_MEASUREMENT_ID";
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
 
 const organizationSchema = {
   "@context": "https://schema.org",

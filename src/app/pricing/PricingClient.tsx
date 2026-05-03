@@ -2,12 +2,6 @@
 
 import Link from "next/link";
 
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
-
 const included = [
   "CarePath SMS engagement (90-day, 20 messages)",
   "Subscription billing management",
