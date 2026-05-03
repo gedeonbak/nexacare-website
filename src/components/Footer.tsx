@@ -9,10 +9,10 @@ const platformLinks = [
 ];
 
 const legalLinks = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "HIPAA Notice", href: "#" },
-  { label: "MSA Overview", href: "#" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms of Service", href: "/terms-of-service" },
+  { label: "HIPAA Notice", href: "/hipaa-notice" },
+  { label: "MSA Overview", href: "/msa-overview" },
 ];
 
 const companyLinks = [
@@ -130,7 +130,7 @@ export default function Footer() {
               ))}
               <li>
                 <a
-                  href="https://linkedin.com/company/nexacare-management"
+                  href="https://www.linkedin.com/in/nexacare-management-5b36b8407"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-[13px] transition-colors hover:text-white"

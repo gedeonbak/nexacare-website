@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Script from "next/script";
 
 interface FormData {
   firstName: string;
@@ -394,43 +395,16 @@ export default function DemoForm() {
             answer your questions, and discuss your clinic&apos;s specific situation.
           </p>
 
-          {/* Calendly placeholder */}
+          {/* Calendly inline widget */}
           <div
-            className="rounded-xl flex flex-col items-center justify-center text-center p-10"
-            style={{
-              border: "1.5px solid #262262",
-              minHeight: "400px",
-              backgroundColor: "#f8f7f5",
-            }}
-          >
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
-              style={{ backgroundColor: "rgba(38,34,98,0.08)" }}
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="4" width="18" height="18" rx="3" stroke="#262262" strokeWidth="1.5" />
-                <path d="M3 9h18M8 2v4M16 2v4" stroke="#262262" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
-            <p className="text-[14px] font-medium mb-2" style={{ color: "#262262" }}>
-              Calendly widget loads here
-            </p>
-            <p className="text-[12px] mb-4" style={{ color: "#777", maxWidth: "320px" }}>
-              {/* TODO: Replace YOUR_CALENDLY_URL with actual Calendly link */}
-              Replace with:{" "}
-              <code style={{ fontSize: "11px", backgroundColor: "#e8e7e4", padding: "2px 6px", borderRadius: "4px" }}>
-                &lt;div class=&apos;calendly-inline-widget&apos; data-url=&apos;YOUR_CALENDLY_URL&apos; style=&apos;min-width:320px;height:630px;&apos;&gt;&lt;/div&gt;
-              </code>
-            </p>
-            {/* Simulate booking for demo purposes */}
-            <button
-              onClick={() => setConfirmed(true)}
-              className="text-[13px] font-semibold px-6 py-2.5 rounded-lg transition-opacity hover:opacity-80"
-              style={{ backgroundColor: "#262262", color: "#ffffff" }}
-            >
-              Simulate Booking (Demo)
-            </button>
-          </div>
+            className="calendly-inline-widget rounded-xl overflow-hidden"
+            data-url="https://calendly.com/admin-nexacaremanagement/30min"
+            style={{ minWidth: "320px", height: "630px" }}
+          />
+          <Script
+            src="https://assets.calendly.com/assets/external/widget.js"
+            strategy="lazyOnload"
+          />
 
           <p className="mt-4 text-center text-[12px]" style={{ color: "#9ca3af" }}>
             Prefer email? Reach us at{" "}
