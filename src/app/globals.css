@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors */
+  --color-navy: #262262;
+  --color-sky: #27AAE1;
+  --color-mid: #264E8B;
+  --color-dark: #0f0e1a;
+  --color-lgray: #f8f7f5;
+  --color-dgray: #e8e7e4;
+
+  /* Font families */
+  --font-sans: var(--font-plus-jakarta-sans), 'Plus Jakarta Sans', sans-serif;
+  --font-display: var(--font-playfair-display), 'Playfair Display', serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page fade transition */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Feature card hover effect */
+.feature-card:hover {
+  box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+}
+
+/* Eyebrow label utility */
+.eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #27AAE1;
+}
+
+/* Tabular nums for stats */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
