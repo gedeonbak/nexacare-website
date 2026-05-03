@@ -851,6 +851,19 @@ export default function Home() {
             >
               Book a Demo →
             </Link>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center justify-center text-[14px] font-semibold transition-colors hover:bg-gray-50"
+              style={{
+                border: "1.5px solid rgba(0,0,0,0.15)",
+                color: "#374151",
+                borderRadius: "8px",
+                padding: "12px 24px",
+                backgroundColor: "#ffffff",
+              }}
+            >
+              See Pricing →
+            </Link>
           </div>
         </div>
       </section>
