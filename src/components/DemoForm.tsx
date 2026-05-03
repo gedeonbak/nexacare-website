@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Script from "next/script";
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 interface FormData {
   firstName: string;
@@ -85,6 +91,26 @@ export default function DemoForm() {
   const [errors, setErrors] = useState<Errors>({});
   const [confirmed, setConfirmed] = useState(false);
 
+  // Capture UTM params on mount and fire GA4 demo_page_view
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const utmData = {
+      utm_source: params.get("utm_source") || "",
+      utm_medium: params.get("utm_medium") || "",
+      utm_campaign: params.get("utm_campaign") || "",
+      utm_content: params.get("utm_content") || "",
+      utm_term: params.get("utm_term") || "",
+    };
+    sessionStorage.setItem("nexacare_utm", JSON.stringify(utmData));
+
+    if (window.gtag) {
+      window.gtag("event", "demo_page_view", {
+        ...utmData,
+        page_location: window.location.href,
+      });
+    }
+  }, []);
+
   const update = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -117,6 +143,16 @@ export default function DemoForm() {
 
   const handleContinue = () => {
     if (validateStep1()) {
+      // Fire GA4 Step 1 complete event with UTM data
+      if (window.gtag) {
+        const utm = JSON.parse(sessionStorage.getItem("nexacare_utm") || "{}");
+        window.gtag("event", "demo_form_step1_complete", {
+          clinic_state: formData.state,
+          patient_volume: formData.patientVolume,
+          referral_source: formData.referralSource,
+          ...utm,
+        });
+      }
       setStep(2);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }

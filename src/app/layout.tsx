@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -47,6 +48,11 @@ export const metadata: Metadata = {
   },
 };
 
+// TODO: Replace GA_MEASUREMENT_ID with your actual GA4 Measurement ID
+// Get it from: analytics.google.com → Admin → Data Streams → your stream → Measurement ID
+// Format: G-XXXXXXXXXX
+const GA_MEASUREMENT_ID = "GA_MEASUREMENT_ID";
+
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -87,6 +93,32 @@ export default function RootLayout({
         <Nav />
         <div className="flex-1">{children}</div>
         <Footer />
+
+        {/* GA4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_MEASUREMENT_ID}', {
+            page_path: window.location.pathname,
+          });
+        `}</Script>
+
+        {/* Apollo.io website tracker */}
+        <Script id="apollo-tracker" strategy="afterInteractive">{`
+          function initApollo(){
+            var n=Math.random().toString(36).substring(7),o=document.createElement("script");
+            o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,
+            o.async=!0,o.defer=!0,
+            o.onload=function(){window.trackingFunctions.onLoad({appId:"69f7764691fc8b00159a4a07"})},
+            document.head.appendChild(o);
+          }
+          initApollo();
+        `}</Script>
       </body>
     </html>
   );
