@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import {
+  MessageSquare,
+  CreditCard,
+  ShieldCheck,
+  Pill,
+  BarChart3,
+  UserPlus,
+} from "lucide-react";
 
 export const metadata: Metadata = {
   title:
@@ -17,37 +25,73 @@ export const metadata: Metadata = {
 
 const featureCards = [
   {
-    icon: "💬",
+    icon: (
+      <div
+        className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-colors group-hover:bg-[#27AAE1]/20"
+        style={{ backgroundColor: "rgba(39,170,225,0.1)" }}
+      >
+        <MessageSquare className="w-6 h-6" strokeWidth={1.5} style={{ color: "#27AAE1" }} />
+      </div>
+    ),
     title: "CarePath SMS Engine",
     desc: "90-day patient engagement system. 20 structured messages across activation, momentum, and retention phases. Risk-trigger escalation. English, Spanish, and French.",
     tag: "Retention → 85%+",
   },
   {
-    icon: "💳",
+    icon: (
+      <div
+        className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-colors group-hover:bg-[#262262]/12"
+        style={{ backgroundColor: "rgba(38,34,98,0.08)" }}
+      >
+        <CreditCard className="w-6 h-6" strokeWidth={1.5} style={{ color: "#262262" }} />
+      </div>
+    ),
     title: "Subscription Billing",
     desc: "PMPM invoicing via Stripe, monthly reconciliation, failed-payment retry logic, and clinic billing dashboards. Zero billing headcount required.",
     tag: "$0 billing overhead",
   },
   {
-    icon: "⚖️",
+    icon: (
+      <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mb-5 transition-colors group-hover:bg-green-100">
+        <ShieldCheck className="w-6 h-6 text-green-600" strokeWidth={1.5} />
+      </div>
+    ),
     title: "HIPAA & Compliance",
     desc: "HIPAA-eligible AWS infrastructure, BAAs with every vendor, CPOM-reviewed MSA, state-by-state legal clearance before every market entry.",
     tag: "Legal risk: mitigated",
   },
   {
-    icon: "🏥",
+    icon: (
+      <div
+        className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-colors group-hover:bg-[#27AAE1]/20"
+        style={{ backgroundColor: "rgba(39,170,225,0.1)" }}
+      >
+        <Pill className="w-6 h-6" strokeWidth={1.5} style={{ color: "#27AAE1" }} />
+      </div>
+    ),
     title: "Pharmacy Coordination",
     desc: "Pharmacy partner relationships, refill coordination, and supply chain monitoring. Patients receive medication without clinic staff involvement.",
     tag: "White-label ready",
   },
   {
-    icon: "📊",
+    icon: (
+      <div
+        className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-colors group-hover:bg-[#262262]/12"
+        style={{ backgroundColor: "rgba(38,34,98,0.08)" }}
+      >
+        <BarChart3 className="w-6 h-6" strokeWidth={1.5} style={{ color: "#262262" }} />
+      </div>
+    ),
     title: "Clinic Analytics",
     desc: "Retention rates, churn risk scores by patient, revenue-per-clinic dashboards, and CarePath progress tracking — all visible in a white-label portal.",
     tag: "Real-time data",
   },
   {
-    icon: "🔄",
+    icon: (
+      <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center mb-5 transition-colors group-hover:bg-green-100">
+        <UserPlus className="w-6 h-6 text-green-600" strokeWidth={1.5} />
+      </div>
+    ),
     title: "Patient Acquisition",
     desc: "Intake flow design, Typeform integration, consent capture, and onboarding automation. From inquiry to enrolled patient in under 24 hours.",
     tag: "< 24hr onboarding",
@@ -383,7 +427,7 @@ export default function Home() {
                   cursor: "default",
                 }}
               >
-                <div className="text-3xl mb-4">{card.icon}</div>
+                {card.icon}
                 <h3
                   className="text-[16px] font-semibold mb-2"
                   style={{ color: "#0f0e1a" }}
