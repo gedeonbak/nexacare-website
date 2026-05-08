@@ -5,189 +5,246 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const navLinks: Array<{ label: string; href: string; live?: boolean }> = [
-  { label: "Platform", href: "/#services" },
-  { label: "How It Works", href: "/how-it-works" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Compliance", href: "/compliance" },
-  { label: "Insights", href: "/insights", live: true },
+const navLinks: Array<{ label: string; href: string; isInsights?: boolean }> = [
+  { label: "Platform",      href: "/#services" },
+  { label: "How It Works",  href: "/how-it-works" },
+  { label: "Pricing",       href: "/pricing" },
+  { label: "Compliance",    href: "/compliance" },
+  { label: "Insights",      href: "/insights", isInsights: true },
 ];
 
 export default function Nav() {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
-  const isTransparent = isHome && !scrolled && !menuOpen;
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
+
+  // ── Colour tokens that vary by context ──────────────────────────────
+  const darkNav = true; // always dark frosted glass on home
+  // On inner pages we switch to white so light-page content stays readable
+  const navBg     = isHome || menuOpen
+    ? "rgba(26,23,64,0.92)"
+    : "rgba(255,255,255,0.95)";
+  const navBorder = isHome
+    ? "1px solid rgba(39,170,225,0.12)"
+    : "1px solid rgba(0,0,0,0.06)";
+  const linkColor      = isHome ? "rgba(255,255,255,0.65)" : "#555555";
+  const linkActive     = isHome ? "#ffffff" : "#262262";
+  const hamburgerColor = isHome ? "#ffffff" : "#262262";
 
   return (
     <>
+      {/* ── Main nav bar ── */}
       <nav
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        className="fixed top-0 left-0 right-0 z-[100] transition-all duration-300"
         style={{
-          backgroundColor: isTransparent ? "transparent" : "#ffffff",
-          borderBottom: scrolled || !isTransparent
-            ? "1px solid rgba(0,0,0,0.06)"
-            : "1px solid transparent",
-          boxShadow: scrolled ? "0 1px 12px rgba(0,0,0,0.06)" : "none",
+          height: "72px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 48px",
+          backgroundColor: navBg,
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: navBorder,
+          boxShadow: isHome ? "none" : "0 1px 12px rgba(0,0,0,0.06)",
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="/" className="flex flex-col items-start shrink-0">
-              <Image
-                src="/images/logo/logo_SOURCE_fulllogo_transparent.png"
-                alt="NexaCare Management"
-                width={193}
-                height={160}
-                priority
-                className="h-11 w-auto md:h-11"
-                style={{ objectFit: "contain" }}
-              />
-              <span
-                className="hidden md:block"
-                style={{
-                  color: "#27AAE1",
-                  fontFamily: "'DM Sans', system-ui, sans-serif",
-                  fontSize: "13px",
-                  fontWeight: 400,
-                  lineHeight: 1,
-                  letterSpacing: "0.01em",
-                  marginTop: "3px",
-                }}
-              >
-                The operating system for independent clinics.
-              </span>
-            </Link>
+        {/* ── LEFT — Brand ── */}
+        <Link
+          href="/"
+          className="flex flex-col items-start shrink-0"
+          style={{ gap: "1px", textDecoration: "none" }}
+        >
+          {isHome ? (
+            /* Dark nav → icon-only (the N-mark reads on navy) */
+            <Image
+              src="/images/logo/logo_SOURCE_icononly_transparent.png"
+              alt="NexaCare Management"
+              width={40}
+              height={45}
+              priority
+              className="h-9 w-auto"
+              style={{ objectFit: "contain" }}
+            />
+          ) : (
+            /* Light nav → full logo */
+            <Image
+              src="/images/logo/logo_SOURCE_fulllogo_transparent.png"
+              alt="NexaCare Management"
+              width={193}
+              height={160}
+              priority
+              className="h-11 w-auto"
+              style={{ objectFit: "contain" }}
+            />
+          )}
+          <span
+            className="hidden md:block"
+            style={{
+              fontSize: "10px",
+              color: "#27AAE1",
+              fontWeight: 400,
+              letterSpacing: "0.06em",
+              opacity: 0.9,
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              marginTop: "2px",
+            }}
+          >
+            The operating system for independent clinics.
+          </span>
+        </Link>
 
-            {/* Desktop links */}
-            <div className="hidden md:flex items-center gap-7">
-              {navLinks.map((link) => (
+        {/* ── CENTER — Desktop links ── */}
+        <div
+          className="hidden md:flex items-center"
+          style={{ gap: "36px" }}
+        >
+          {navLinks.map((link) => {
+            if (link.isInsights) {
+              return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center gap-1.5 text-[13px] font-medium transition-colors duration-150"
+                  className="flex items-center"
                   style={{
-                    color:
-                      pathname === link.href.replace("/#services", "/")
-                        ? "#262262"
-                        : "#555555",
-                    fontFamily: "var(--font-plus-jakarta-sans)",
+                    gap: "6px",
+                    color: "#27AAE1",
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    textDecoration: "none",
                   }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#262262")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color =
-                      pathname === link.href.replace("/#services", "/")
-                        ? "#262262"
-                        : "#555555")
-                  }
                 >
-                  {link.label}
-                  {link.live && (
-                    <span
-                      className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full"
-                      style={{ backgroundColor: "rgba(39,170,225,0.12)", color: "#27AAE1" }}
-                    >
-                      <span
-                        className="w-1 h-1 rounded-full"
-                        style={{ backgroundColor: "#27AAE1" }}
-                      />
-                      LIVE
-                    </span>
-                  )}
-                </Link>
-              ))}
-            </div>
-
-            {/* CTA + hamburger */}
-            <div className="flex items-center gap-3">
-              <Link
-                href="/book-demo"
-                className="hidden md:inline-flex items-center justify-center text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-                style={{
-                  backgroundColor: "#262262",
-                  borderRadius: "8px",
-                  padding: "9px 20px",
-                  fontFamily: "var(--font-plus-jakarta-sans)",
-                }}
-              >
-                Book a Demo
-              </Link>
-
-              {/* Hamburger */}
-              <button
-                className="md:hidden p-2 rounded-lg transition-colors"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle menu"
-                style={{ color: "#262262" }}
-              >
-                <div className="w-5 h-5 flex flex-col justify-center gap-1.5">
                   <span
-                    className="block h-0.5 w-full transition-all duration-300 origin-center"
                     style={{
-                      backgroundColor: "#262262",
-                      transform: menuOpen
-                        ? "translateY(8px) rotate(45deg)"
-                        : "none",
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "#27AAE1",
+                      display: "inline-block",
+                      animation: "pulseDot 2s ease-in-out infinite",
+                      flexShrink: 0,
                     }}
                   />
+                  Insights
+                </Link>
+              );
+            }
+            const isActive =
+              pathname === link.href ||
+              (link.href === "/#services" && pathname === "/");
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="transition-colors duration-200"
+                style={{
+                  fontSize: "13px",
+                  fontWeight: 500,
+                  color: isActive ? linkActive : linkColor,
+                  letterSpacing: "0.02em",
+                  textDecoration: "none",
+                }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = linkActive)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = isActive
+                    ? linkActive
+                    : linkColor)
+                }
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* ── RIGHT — CTA + hamburger ── */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/book-demo"
+            className="hidden md:inline-block"
+            style={{
+              background: isHome ? "#27AAE1" : "#262262",
+              color: isHome ? "#1a1740" : "#ffffff",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 22px",
+              fontSize: "13px",
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+              textDecoration: "none",
+              transition: "background 0.2s, transform 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = isHome ? "#3cc0f5" : "#1a1740";
+              el.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget as HTMLElement;
+              el.style.background = isHome ? "#27AAE1" : "#262262";
+              el.style.transform = "translateY(0)";
+            }}
+          >
+            Book a Demo →
+          </Link>
+
+          {/* Hamburger */}
+          <button
+            className="md:hidden p-2 rounded-lg"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
+          >
+            <div className="w-5 h-5 flex flex-col justify-center gap-1.5">
+              {[
+                menuOpen ? "translateY(8px) rotate(45deg)" : "none",
+                undefined,
+                menuOpen ? "translateY(-8px) rotate(-45deg)" : "none",
+              ].map((transform, i) =>
+                i === 1 ? (
                   <span
+                    key={i}
                     className="block h-0.5 w-full transition-all duration-300"
                     style={{
-                      backgroundColor: "#262262",
+                      backgroundColor: hamburgerColor,
                       opacity: menuOpen ? 0 : 1,
                     }}
                   />
+                ) : (
                   <span
+                    key={i}
                     className="block h-0.5 w-full transition-all duration-300 origin-center"
                     style={{
-                      backgroundColor: "#262262",
-                      transform: menuOpen
-                        ? "translateY(-8px) rotate(-45deg)"
-                        : "none",
+                      backgroundColor: hamburgerColor,
+                      transform: transform ?? "none",
                     }}
                   />
-                </div>
-              </button>
+                )
+              )}
             </div>
-          </div>
+          </button>
         </div>
       </nav>
 
-      {/* Mobile overlay */}
+      {/* ── Mobile overlay ── */}
       <div
-        className="fixed inset-0 z-40 md:hidden transition-all duration-300 flex flex-col"
+        className="fixed inset-0 z-40 md:hidden flex flex-col transition-all duration-300"
         style={{
-          backgroundColor: "#ffffff",
+          backgroundColor: "#1a1740",
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? "auto" : "none",
-          paddingTop: "64px",
+          paddingTop: "72px",
         }}
       >
         <div className="flex flex-col px-6 pt-8 gap-6">
@@ -197,19 +254,23 @@ export default function Nav() {
               href={link.href}
               className="text-xl font-medium transition-colors"
               style={{
-                color: "#262262",
+                color: link.isInsights ? "#27AAE1" : "rgba(255,255,255,0.85)",
                 fontFamily: "var(--font-plus-jakarta-sans)",
+                textDecoration: "none",
               }}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}
             </Link>
           ))}
-          <div className="pt-4 border-t" style={{ borderColor: "#e8e7e4" }}>
+          <div
+            className="pt-4 border-t"
+            style={{ borderColor: "rgba(255,255,255,0.1)" }}
+          >
             <Link
               href="/book-demo"
-              className="inline-flex items-center justify-center w-full text-[15px] font-semibold text-white py-3 rounded-lg transition-opacity hover:opacity-90"
-              style={{ backgroundColor: "#262262" }}
+              className="inline-flex items-center justify-center w-full text-[15px] font-semibold py-3 rounded-lg transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "#27AAE1", color: "#1a1740", textDecoration: "none" }}
               onClick={() => setMenuOpen(false)}
             >
               Book a Demo →
