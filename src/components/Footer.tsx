@@ -47,19 +47,40 @@ export default function Footer() {
                 Management
               </span>
             </div>
-            <p className="text-[13px] leading-relaxed mb-4" style={{ color: "#9ca3af" }}>
+            <p className="text-[13px] leading-relaxed mb-5" style={{ color: "#9ca3af" }}>
               The operating system for GLP-1 clinics.
             </p>
-            <p className="text-[13px] mb-1" style={{ color: "#6b7280" }}>
-              Alpharetta, Georgia
+
+            {/* Address */}
+            <p className="text-[13px] leading-relaxed" style={{ color: "#6b7280" }}>
+              1870 The Exchange SE, Suite 220
+              <br />
+              Atlanta, GA 30339
             </p>
-            <a
-              href="mailto:hello@nexacaremanagement.com"
-              className="text-[13px] transition-colors hover:text-white"
-              style={{ color: "#9ca3af" }}
-            >
-              hello@nexacaremanagement.com
-            </a>
+
+            {/* Divider */}
+            <div
+              className="my-4"
+              style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+            />
+
+            {/* Emails */}
+            <div className="space-y-2">
+              <a
+                href="mailto:hello@nexacaremanagement.com"
+                className="block text-[13px] transition-colors hover:text-white"
+                style={{ color: "#9ca3af" }}
+              >
+                hello@nexacaremanagement.com
+              </a>
+              <a
+                href="mailto:contact@nexacaremanagement.com"
+                className="block text-[13px] transition-colors hover:text-white"
+                style={{ color: "#9ca3af" }}
+              >
+                contact@nexacaremanagement.com
+              </a>
+            </div>
           </div>
 
           {/* Col 2 — Platform */}
