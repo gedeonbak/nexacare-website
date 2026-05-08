@@ -5,12 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const navLinks: Array<{ label: string; href: string; isInsights?: boolean }> = [
+const navLinks: Array<{ label: string; href: string; isInsights?: boolean; isDemo?: boolean }> = [
   { label: "Platform",      href: "/#services" },
   { label: "How It Works",  href: "/how-it-works" },
   { label: "Pricing",       href: "/pricing" },
   { label: "Compliance",    href: "/compliance" },
   { label: "Insights",      href: "/insights", isInsights: true },
+  { label: "Live Demo",     href: "/demo/portal", isDemo: true },
 ];
 
 export default function Nav() {
@@ -139,6 +140,29 @@ export default function Nav() {
                 </Link>
               );
             }
+            if (link.isDemo) {
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="flex items-center"
+                  style={{
+                    gap: "6px",
+                    color: "#27AAE1",
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    letterSpacing: "0.05em",
+                    textDecoration: "none",
+                    border: "1px solid rgba(39,170,225,0.3)",
+                    borderRadius: "6px",
+                    padding: "4px 10px",
+                    background: "rgba(39,170,225,0.08)",
+                  }}
+                >
+                  ▶ Live Demo
+                </Link>
+              );
+            }
             const isActive =
               pathname === link.href ||
               (link.href === "/#services" && pathname === "/");
@@ -254,13 +278,13 @@ export default function Nav() {
               href={link.href}
               className="text-xl font-medium transition-colors"
               style={{
-                color: link.isInsights ? "#27AAE1" : "rgba(255,255,255,0.85)",
+                color: (link.isInsights || link.isDemo) ? "#27AAE1" : "rgba(255,255,255,0.85)",
                 fontFamily: "var(--font-plus-jakarta-sans)",
                 textDecoration: "none",
               }}
               onClick={() => setMenuOpen(false)}
             >
-              {link.label}
+              {link.isDemo ? "▶ Live Demo" : link.label}
             </Link>
           ))}
           <div
