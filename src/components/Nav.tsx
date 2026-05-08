@@ -58,16 +58,30 @@ export default function Nav() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0">
+            <Link href="/" className="flex flex-col items-start shrink-0">
               <Image
                 src="/images/logo/logo_SOURCE_fulllogo_transparent.png"
                 alt="NexaCare Management"
                 width={193}
                 height={160}
                 priority
-                className="h-9 w-auto md:h-11"
+                className="h-11 w-auto md:h-11"
                 style={{ objectFit: "contain" }}
               />
+              <span
+                className="hidden md:block"
+                style={{
+                  color: "#27AAE1",
+                  fontFamily: "'DM Sans', system-ui, sans-serif",
+                  fontSize: "13px",
+                  fontWeight: 400,
+                  lineHeight: 1,
+                  letterSpacing: "0.01em",
+                  marginTop: "3px",
+                }}
+              >
+                The operating system for independent clinics.
+              </span>
             </Link>
 
             {/* Desktop links */}
