@@ -4,11 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const navLinks = [
+const navLinks: Array<{ label: string; href: string; live?: boolean }> = [
   { label: "Platform", href: "/#services" },
   { label: "How It Works", href: "/how-it-works" },
   { label: "Pricing", href: "/pricing" },
   { label: "Compliance", href: "/compliance" },
+  { label: "Insights", href: "/insights", live: true },
 ];
 
 export default function Nav() {
@@ -83,7 +84,7 @@ export default function Nav() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-[13px] font-medium transition-colors duration-150"
+                  className="flex items-center gap-1.5 text-[13px] font-medium transition-colors duration-150"
                   style={{
                     color:
                       pathname === link.href.replace("/#services", "/")
@@ -102,6 +103,18 @@ export default function Nav() {
                   }
                 >
                   {link.label}
+                  {link.live && (
+                    <span
+                      className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full"
+                      style={{ backgroundColor: "rgba(39,170,225,0.12)", color: "#27AAE1" }}
+                    >
+                      <span
+                        className="w-1 h-1 rounded-full"
+                        style={{ backgroundColor: "#27AAE1" }}
+                      />
+                      LIVE
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>

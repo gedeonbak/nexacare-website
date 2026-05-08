@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import NewsCarousel from "@/components/NewsCarousel";
+import { fetchNews } from "@/lib/news";
 import {
   MessageSquare,
   CreditCard,
@@ -8,6 +10,9 @@ import {
   Pill,
   BarChart3,
   UserPlus,
+  FlaskConical,
+  TrendingUp,
+  Scale,
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -125,7 +130,11 @@ const steps = [
   },
 ];
 
-export default function Home() {
+export const revalidate = 3600; // revalidate news every hour
+
+export default async function Home() {
+  const newsItems = await fetchNews().catch(() => []);
+  const previewItems = newsItems.slice(0, 9);
   return (
     <>
       <AnnouncementBar />
@@ -754,6 +763,70 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* GLP-1 INTELLIGENCE PREVIEW */}
+      {previewItems.length > 0 && (
+        <section style={{ backgroundColor: "#f8f7f5" }} className="py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <p className="eyebrow">GLP-1 INTELLIGENCE</p>
+                  <span
+                    className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+                    style={{ backgroundColor: "rgba(39,170,225,0.12)", color: "#27AAE1" }}
+                  >
+                    <span
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{
+                        backgroundColor: "#27AAE1",
+                        animation: "pulse-dot 2s infinite",
+                      }}
+                    />
+                    LIVE
+                  </span>
+                </div>
+                <h2
+                  style={{
+                    fontFamily: "var(--font-playfair-display)",
+                    fontSize: "clamp(26px, 3vw, 36px)",
+                    fontWeight: 700,
+                    letterSpacing: "-0.025em",
+                    color: "#0f0e1a",
+                  }}
+                >
+                  What&apos;s happening in GLP-1.
+                </h2>
+              </div>
+
+              {/* Category legend */}
+              <div className="flex items-center gap-4 shrink-0">
+                {[
+                  { icon: <FlaskConical size={13} strokeWidth={1.5} />, label: "Clinical", color: "#27AAE1" },
+                  { icon: <TrendingUp size={13} strokeWidth={1.5} />, label: "Industry", color: "#262262" },
+                  { icon: <Scale size={13} strokeWidth={1.5} />, label: "Regulatory", color: "#d97706" },
+                ].map((cat) => (
+                  <div key={cat.label} className="flex items-center gap-1.5">
+                    <span style={{ color: cat.color }}>{cat.icon}</span>
+                    <span className="text-[12px] font-medium" style={{ color: "#777" }}>
+                      {cat.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <NewsCarousel items={previewItems} />
+          </div>
+
+          <style>{`
+            @keyframes pulse-dot {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.3; }
+            }
+          `}</style>
+        </section>
+      )}
 
       {/* WHO WE SERVE */}
       <section style={{ backgroundColor: "#f8f7f5" }} className="py-24">
