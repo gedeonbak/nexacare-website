@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -57,25 +58,16 @@ export default function Nav() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-0 shrink-0">
-              <span
-                className="text-lg font-bold leading-none"
-                style={{ color: "#262262", fontFamily: "var(--font-plus-jakarta-sans)" }}
-              >
-                Nexa
-              </span>
-              <span
-                className="text-lg font-bold leading-none"
-                style={{ color: "#27AAE1", fontFamily: "var(--font-plus-jakarta-sans)" }}
-              >
-                Care
-              </span>
-              <span
-                className="text-sm font-normal leading-none ml-1.5"
-                style={{ color: "#9ca3af", fontFamily: "var(--font-plus-jakarta-sans)" }}
-              >
-                Management
-              </span>
+            <Link href="/" className="flex items-center shrink-0">
+              <Image
+                src="/images/logo/logo_SOURCE_fulllogo_transparent.png"
+                alt="NexaCare Management"
+                width={193}
+                height={160}
+                priority
+                className="h-9 w-auto md:h-11"
+                style={{ objectFit: "contain" }}
+              />
             </Link>
 
             {/* Desktop links */}

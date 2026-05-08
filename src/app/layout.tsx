@@ -31,9 +31,8 @@ export const metadata: Metadata = {
     "Full-stack operational infrastructure for GLP-1 weight loss programs. HIPAA-compliant, non-clinical, built for med spas and primary care in GA, FL, TX.",
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-64x64.png", sizes: "64x64", type: "image/png" },
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
     other: [{ rel: "manifest", url: "/site.webmanifest" }],
@@ -47,6 +46,16 @@ export const metadata: Metadata = {
       "NexaCare Management — GLP-1 MSO Infrastructure for Independent Clinics",
     description:
       "Full-stack operational infrastructure for GLP-1 weight loss programs. HIPAA-compliant, non-clinical, built for med spas and primary care in GA, FL, TX.",
+    // TODO: Create a 1200×630px branded OG card for optimal social sharing previews.
+    // Current logo is 1280×1063 (portrait) — works but may crop on LinkedIn/WhatsApp.
+    images: [
+      {
+        url: "/images/logo/logo_SOURCE_fulllogo_transparent.png",
+        width: 1280,
+        height: 1063,
+        alt: "NexaCare Management — GLP-1 MSO Infrastructure",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -54,6 +63,7 @@ export const metadata: Metadata = {
       "NexaCare Management — GLP-1 MSO Infrastructure for Independent Clinics",
     description:
       "Full-stack operational infrastructure for GLP-1 weight loss programs. HIPAA-compliant, non-clinical, built for med spas and primary care in GA, FL, TX.",
+    images: ["/images/logo/logo_SOURCE_fulllogo_transparent.png"],
   },
 };
 

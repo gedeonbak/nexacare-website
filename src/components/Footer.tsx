@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const platformLinks = [
@@ -27,26 +28,16 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Col 1 — Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-0 mb-4">
-              <span
-                className="text-lg font-bold"
-                style={{ color: "#ffffff", fontFamily: "var(--font-plus-jakarta-sans)" }}
-              >
-                Nexa
-              </span>
-              <span
-                className="text-lg font-bold"
-                style={{ color: "#27AAE1", fontFamily: "var(--font-plus-jakarta-sans)" }}
-              >
-                Care
-              </span>
-              <span
-                className="text-sm font-normal ml-1.5"
-                style={{ color: "#9ca3af", fontFamily: "var(--font-plus-jakarta-sans)" }}
-              >
-                Management
-              </span>
-            </div>
+            <Link href="/" className="inline-flex items-center mb-4">
+              <Image
+                src="/images/logo/logo_SOURCE_icononly_transparent.png"
+                alt="NexaCare Management"
+                width={160}
+                height={178}
+                className="h-10 w-auto"
+                style={{ objectFit: "contain" }}
+              />
+            </Link>
             <p className="text-[13px] leading-relaxed mb-5" style={{ color: "#9ca3af" }}>
               The operating system for GLP-1 clinics.
             </p>
