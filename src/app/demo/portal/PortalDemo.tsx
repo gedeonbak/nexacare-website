@@ -1546,6 +1546,123 @@ function AdminPipelineTab() {
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 
+// ─── ADMIN GATE MODAL ────────────────────────────────────────────────────────
+
+function AdminGate({
+  onSuccess, onCancel,
+}: { onSuccess: () => void; onCancel: () => void }) {
+  const [input, setInput] = useState('');
+  const [error, setError] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  const attempt = () => {
+    const secret = process.env.NEXT_PUBLIC_PORTAL_ADMIN_KEY ?? '';
+    if (secret && input === secret) {
+      // Remember in sessionStorage so the gate doesn't re-fire this session
+      sessionStorage.setItem('nxc_admin_unlocked', '1');
+      onSuccess();
+    } else {
+      setError(true);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    }
+  };
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 200,
+      background: 'rgba(10,9,22,0.88)',
+      backdropFilter: 'blur(8px)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }}>
+      <div style={{
+        background: '#111827',
+        border: '1px solid rgba(39,170,225,0.2)',
+        borderRadius: 16,
+        padding: '40px 36px',
+        width: '100%', maxWidth: 380,
+        boxShadow: '0 40px 80px rgba(0,0,0,0.6)',
+        transform: shake ? 'translateX(0)' : undefined,
+        animation: shake ? 'gateShake 0.45s ease' : undefined,
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: '50%',
+            background: 'rgba(39,170,225,0.12)',
+            border: '1px solid rgba(39,170,225,0.25)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            margin: '0 auto 16px',
+            fontSize: 20,
+          }}>🔐</div>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: 'white', marginBottom: 6 }}>
+            Admin Access
+          </h2>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.5 }}>
+            This portal view is restricted.<br />Enter the admin password to continue.
+          </p>
+        </div>
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={input}
+          onChange={e => { setInput(e.target.value); setError(false); }}
+          onKeyDown={e => e.key === 'Enter' && attempt()}
+          autoFocus
+          style={{
+            width: '100%', boxSizing: 'border-box',
+            padding: '12px 14px',
+            background: 'rgba(255,255,255,0.06)',
+            border: `1px solid ${error ? '#ef4444' : 'rgba(255,255,255,0.12)'}`,
+            borderRadius: 8,
+            fontSize: 14, color: 'white',
+            outline: 'none',
+            marginBottom: 8,
+            fontFamily: 'monospace',
+          }}
+        />
+        {error && (
+          <p style={{ fontSize: 12, color: '#ef4444', marginBottom: 12 }}>
+            Incorrect password. Try again.
+          </p>
+        )}
+
+        <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+          <button onClick={onCancel} style={{
+            flex: 1, padding: '11px 0',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.12)',
+            borderRadius: 8, cursor: 'pointer',
+            fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.5)',
+          }}>
+            Cancel
+          </button>
+          <button onClick={attempt} style={{
+            flex: 2, padding: '11px 0',
+            background: '#27AAE1', border: 'none',
+            borderRadius: 8, cursor: 'pointer',
+            fontSize: 13, fontWeight: 700, color: '#0a0916',
+          }}>
+            Unlock Admin →
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes gateShake {
+          0%,100% { transform: translateX(0); }
+          20%      { transform: translateX(-8px); }
+          40%      { transform: translateX(8px); }
+          60%      { transform: translateX(-6px); }
+          80%      { transform: translateX(6px); }
+        }
+      `}</style>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default function PortalDemo() {
   const [view, setView] = useState<'clinic' | 'admin'>('clinic');
   const [activeClinic, setActiveClinic] = useState<Clinic>(CLINICS[0]);
@@ -1554,6 +1671,7 @@ export default function PortalDemo() {
   const [resolvedEscalations, setResolvedEscalations] = useState<string[]>([]);
   const [fading, setFading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [showAdminGate, setShowAdminGate] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -1562,7 +1680,7 @@ export default function PortalDemo() {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  const switchView = (newView: 'clinic' | 'admin') => {
+  const doSwitchView = (newView: 'clinic' | 'admin') => {
     setFading(true);
     setTimeout(() => {
       setView(newView);
@@ -1570,6 +1688,20 @@ export default function PortalDemo() {
       setActivePatient(null);
       setFading(false);
     }, 150);
+  };
+
+  const switchView = (newView: 'clinic' | 'admin') => {
+    if (newView === 'admin') {
+      // Already unlocked this session?
+      if (typeof window !== 'undefined' &&
+          sessionStorage.getItem('nxc_admin_unlocked') === '1') {
+        doSwitchView('admin');
+      } else {
+        setShowAdminGate(true);
+      }
+    } else {
+      doSwitchView('clinic');
+    }
   };
 
   const switchTab = (tab: string) => {
@@ -1797,6 +1929,17 @@ export default function PortalDemo() {
         {/* CTA */}
         <DemoCTA />
       </div>
+
+      {/* Admin password gate */}
+      {showAdminGate && (
+        <AdminGate
+          onSuccess={() => {
+            setShowAdminGate(false);
+            doSwitchView('admin');
+          }}
+          onCancel={() => setShowAdminGate(false)}
+        />
+      )}
     </>
   );
 }
