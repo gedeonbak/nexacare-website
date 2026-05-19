@@ -18,7 +18,7 @@ import { sendSMS } from '@/lib/twilio';
 
 async function handler(req: NextRequest) {
   // ── Auth ───────────────────────────────────────────────────────────────────
-  const cronSecret = (process.env.CRON_SECRET ?? '').trim();
+  const cronSecret = (process.env.CAREPATH_CRON_KEY ?? '').trim();
   if (cronSecret) {
     const auth = (req.headers.get('authorization') ?? '').trim();
     if (auth !== `Bearer ${cronSecret}`) {
