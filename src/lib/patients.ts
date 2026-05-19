@@ -45,16 +45,23 @@ export interface PatientStats {
 
 // ── Read queries ─────────────────────────────────────────────────────────────
 
+// carepath_day is computed at query time since Postgres generated columns
+// require immutable expressions (NOW() / CURRENT_DATE are volatile).
+const PATIENT_COLS = `
+  *,
+  (CURRENT_DATE - enrollment_date)::INTEGER AS carepath_day
+`;
+
 export async function getAllPatients(): Promise<Patient[]> {
   return query<Patient>(
-    `SELECT * FROM patients
+    `SELECT ${PATIENT_COLS} FROM patients
      ORDER BY churn_risk_score DESC, created_at DESC`
   );
 }
 
 export async function getPatientsByClinic(clinicId: string): Promise<Patient[]> {
   return query<Patient>(
-    `SELECT * FROM patients
+    `SELECT ${PATIENT_COLS} FROM patients
      WHERE clinic_id = $1
      ORDER BY churn_risk_score DESC`,
     [clinicId]
@@ -63,7 +70,7 @@ export async function getPatientsByClinic(clinicId: string): Promise<Patient[]> 
 
 export async function getActivePatients(): Promise<Patient[]> {
   return query<Patient>(
-    `SELECT * FROM patients
+    `SELECT ${PATIENT_COLS} FROM patients
      WHERE status = 'Active'
      ORDER BY churn_risk_score DESC`
   );
@@ -71,7 +78,7 @@ export async function getActivePatients(): Promise<Patient[]> {
 
 export async function getPatientById(patientId: string): Promise<Patient | null> {
   return queryOne<Patient>(
-    `SELECT * FROM patients WHERE patient_id = $1`,
+    `SELECT ${PATIENT_COLS} FROM patients WHERE patient_id = $1`,
     [patientId]
   );
 }
@@ -83,7 +90,7 @@ export async function getPatientById(patientId: string): Promise<Patient | null>
  */
 export async function getPatientByPhoneHash(phoneHash: string): Promise<Patient | null> {
   return queryOne<Patient>(
-    `SELECT * FROM patients
+    `SELECT ${PATIENT_COLS} FROM patients
      WHERE phone_hash = $1 AND status = 'Active'
      LIMIT 1`,
     [phoneHash]
@@ -96,7 +103,7 @@ export async function getPatientByPhoneHash(phoneHash: string): Promise<Patient 
  */
 export async function getPatientsForTodaySchedule(): Promise<Patient[]> {
   return query<Patient>(
-    `SELECT * FROM patients
+    `SELECT ${PATIENT_COLS} FROM patients
      WHERE status = 'Active'
        AND next_message_date <= CURRENT_DATE
        AND next_message_num <= 20
@@ -107,7 +114,7 @@ export async function getPatientsForTodaySchedule(): Promise<Patient[]> {
 /** Return all active patients with a non-None escalation status. */
 export async function getEscalations(): Promise<Patient[]> {
   return query<Patient>(
-    `SELECT * FROM patients
+    `SELECT ${PATIENT_COLS} FROM patients
      WHERE escalation_status IN ('Founder Alerted', 'Monitoring')
        AND status = 'Active'
      ORDER BY churn_risk_score DESC, last_reply_date DESC`

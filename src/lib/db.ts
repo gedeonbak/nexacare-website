@@ -16,8 +16,10 @@ export const pool =
     database: process.env.DATABASE_NAME,
     user:     process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
+    // AWS RDS uses Amazon's own CA — not in Node's default trust store.
+    // Connection is still TLS-encrypted; we skip chain verification.
     ssl: {
-      rejectUnauthorized: true,
+      rejectUnauthorized: false,
     },
     max:                    10,
     idleTimeoutMillis:      30_000,

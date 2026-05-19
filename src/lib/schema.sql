@@ -21,10 +21,8 @@ CREATE TABLE IF NOT EXISTS patients (
   preferred_language  VARCHAR(5)   NOT NULL DEFAULT 'EN'
                         CHECK (preferred_language IN ('EN', 'ES', 'FR')),
   enrollment_date     DATE         NOT NULL,
-  -- computed: days since enrollment; refreshes on every read
-  carepath_day        INTEGER GENERATED ALWAYS AS (
-                        EXTRACT(DAY FROM NOW() - enrollment_date::TIMESTAMP)::INTEGER
-                      ) STORED,
+  -- carepath_day is computed at query time: (CURRENT_DATE - enrollment_date)
+  -- NOT stored — generated columns require immutable expressions in Postgres.
   status              VARCHAR(20)  NOT NULL DEFAULT 'Active'
                         CHECK (status IN ('Active', 'Paused', 'Opted Out', 'Churned', 'Completed')),
   churn_risk_score    SMALLINT     NOT NULL DEFAULT 0
