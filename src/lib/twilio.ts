@@ -1,33 +1,47 @@
 // Twilio REST API helper — sending SMS and validating inbound webhooks.
 // No Twilio SDK dependency; uses native fetch + crypto.
-// Required env vars: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER
+//
+// Required env vars:
+//   TWILIO_ACCOUNT_SID
+//   TWILIO_AUTH_TOKEN
+//   TWILIO_MESSAGING_SERVICE_SID  (preferred — routes via Messaging Service)
+//   TWILIO_FROM_NUMBER            (fallback if no Messaging Service SID)
 
 import crypto from 'crypto';
 
-function getSid()   { return (process.env.TWILIO_ACCOUNT_SID  ?? '').trim(); }
-function getToken() { return (process.env.TWILIO_AUTH_TOKEN   ?? '').trim(); }
-function getFrom()  { return (process.env.TWILIO_FROM_NUMBER  ?? '').trim(); }
+function getSid()     { return (process.env.TWILIO_ACCOUNT_SID            ?? '').trim(); }
+function getToken()   { return (process.env.TWILIO_AUTH_TOKEN              ?? '').trim(); }
+function getMsgSvc()  { return (process.env.TWILIO_MESSAGING_SERVICE_SID  ?? '').trim(); }
+function getFrom()    { return (process.env.TWILIO_FROM_NUMBER             ?? '').trim(); }
 
 // ── Send ─────────────────────────────────────────────────────────────────────
 
 /**
  * Send an SMS via the Twilio REST API.
+ * Prefers MessagingServiceSid (A2P-registered) over a raw From number.
  * Returns the Twilio Message SID.
  * Throws on any non-2xx response.
  */
 export async function sendSMS(to: string, body: string): Promise<string> {
-  const sid   = getSid();
-  const token = getToken();
-  const from  = getFrom();
+  const sid    = getSid();
+  const token  = getToken();
+  const msgSvc = getMsgSvc();
+  const from   = getFrom();
 
-  if (!sid || !token || !from) {
+  if (!sid || !token || (!msgSvc && !from)) {
     throw new Error(
-      'Twilio env vars not configured — set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM_NUMBER',
+      'Twilio env vars not configured — set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, ' +
+      'and either TWILIO_MESSAGING_SERVICE_SID or TWILIO_FROM_NUMBER',
     );
   }
 
-  const url = `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`;
+  const url  = `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`;
   const auth = Buffer.from(`${sid}:${token}`).toString('base64');
+
+  // Use Messaging Service SID when available — bypasses per-number A2P restrictions
+  const params: Record<string, string> = msgSvc
+    ? { To: to, MessagingServiceSid: msgSvc, Body: body }
+    : { To: to, From: from, Body: body };
 
   const res = await fetch(url, {
     method:  'POST',
@@ -35,7 +49,7 @@ export async function sendSMS(to: string, body: string): Promise<string> {
       Authorization:  `Basic ${auth}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: new URLSearchParams({ To: to, From: from, Body: body }).toString(),
+    body: new URLSearchParams(params).toString(),
   });
 
   if (!res.ok) {
