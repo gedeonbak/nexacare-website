@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/carepath/send-scheduled",
+      "schedule": "0 14 * * *"
+    }
+  ]
+}
