@@ -31,11 +31,13 @@ export const metadata: Metadata = {
     "Full-stack operational infrastructure for GLP-1 weight loss programs. HIPAA-compliant, non-clinical, built for med spas and primary care in GA, FL, TX.",
   icons: {
     icon: [
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-64x64.png", sizes: "64x64", type: "image/png" },
+      { url: "/favicon.ico",        sizes: "any" },
+      { url: "/favicon-32x32.png",  sizes: "32x32", type: "image/png" },
+      { url: "/favicon-64x64.png",  sizes: "64x64", type: "image/png" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
-    other: [{ rel: "manifest", url: "/site.webmanifest" }],
+    shortcut: "/favicon.ico",
+    apple:    [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    other:    [{ rel: "manifest", url: "/site.webmanifest" }],
   },
   openGraph: {
     type: "website",
@@ -97,6 +99,10 @@ export default function RootLayout({
       className={`${plusJakartaSans.variable} ${playfairDisplay.variable}`}
     >
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64x64.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="canonical" href="https://nexacaremanagement.com" />
         <script
           type="application/ld+json"

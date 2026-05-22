@@ -5,7 +5,7 @@ const TRUST_ITEMS = [
   { icon: ShieldCheck, text: "CPOM-Reviewed · GA · FL · TX" },
   { icon: FileText,    text: "MSA Templates · Healthcare Counsel" },
   { icon: Zap,         text: "Twilio CarePath · 937× SMS ROI" },
-  { icon: DollarSign,  text: "$6,200/mo Burn · 83pt Breakeven" },
+  { icon: DollarSign,  text: "$75–$99 PMPM · No Setup Fees" },
 ];
 
 export default function TrustBar() {

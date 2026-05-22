@@ -3,6 +3,18 @@
     {
       "path": "/api/carepath/send-scheduled",
       "schedule": "0 14 * * *"
+    },
+    {
+      "path": "/api/carepath/check-no-reply",
+      "schedule": "0 15 * * *"
+    },
+    {
+      "path": "/api/stripe/billing-run",
+      "schedule": "0 10 1 * *"
+    },
+    {
+      "path": "/api/billing/monthly-trigger",
+      "schedule": "0 12 1 * *"
     }
   ]
 }

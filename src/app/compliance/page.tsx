@@ -232,7 +232,7 @@ export default function CompliancePage() {
                 accentBg: "rgba(34,197,94,0.08)",
                 label: "LEGAL",
                 title: "Healthcare Counsel",
-                desc: "MSO/CPOM specialist engaged for TX, FL, GA before pilot launch. $25–40K initial engagement + $2K/month retainer covering all state expansions.",
+                desc: "NexaCare works with dedicated MSO and CPOM healthcare counsel across all launch markets before any clinic goes live. Legal compliance is a hard gate — not an afterthought.",
                 details: [
                   "CPOM analysis per state",
                   "MSA review and drafting",

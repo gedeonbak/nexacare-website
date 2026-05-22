@@ -76,6 +76,16 @@ export async function getActivePatients(): Promise<Patient[]> {
   );
 }
 
+/** Count active patients for a specific clinic — used by billing-run cron. */
+export async function getActivePatientCountByClinic(clinicId: string): Promise<number> {
+  const rows = await query<{ count: string }>(
+    `SELECT COUNT(*)::TEXT AS count FROM patients
+     WHERE clinic_id = $1 AND status = 'Active'`,
+    [clinicId]
+  );
+  return parseInt(rows[0]?.count ?? '0', 10);
+}
+
 export async function getPatientById(patientId: string): Promise<Patient | null> {
   return queryOne<Patient>(
     `SELECT ${PATIENT_COLS} FROM patients WHERE patient_id = $1`,
@@ -108,6 +118,30 @@ export async function getPatientsForTodaySchedule(): Promise<Patient[]> {
        AND next_message_date <= CURRENT_DATE
        AND next_message_num <= 20
      ORDER BY next_message_date ASC`
+  );
+}
+
+/**
+ * Return active patients whose most recent sent message (2–7 days ago)
+ * has received no reply. Used by the check-no-reply cron.
+ */
+export async function getPatientsWithNoRecentReply(): Promise<
+  (Patient & { last_sent_at: string; last_message_num: number })[]
+> {
+  return query<Patient & { last_sent_at: string; last_message_num: number }>(
+    `SELECT DISTINCT ON (p.patient_id)
+       p.*,
+       (CURRENT_DATE - p.enrollment_date)::INTEGER AS carepath_day,
+       ml.sent_at  AS last_sent_at,
+       ml.message_number AS last_message_num
+     FROM patients p
+     JOIN carepath_message_log ml ON ml.patient_id = p.patient_id
+     WHERE p.status = 'Active'
+       AND ml.delivery_status NOT IN ('Failed', 'Opted Out')
+       AND ml.patient_reply IS NULL
+       AND ml.sent_at >= NOW() - INTERVAL '7 days'
+       AND ml.sent_at <= NOW() - INTERVAL '2 days'
+     ORDER BY p.patient_id, ml.sent_at DESC`
   );
 }
 

@@ -5,6 +5,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import type { jsPDF as JsPDFType } from 'jspdf';
+import { PopupButton } from '@typeform/embed-react';
 import {
   LayoutDashboard, Users, MessageSquare, CreditCard,
   Building2, AlertTriangle, Activity, Receipt, TrendingUp,
@@ -356,6 +358,254 @@ function SectionHeading({ title, sub }: { title: string; sub?: string }) {
   );
 }
 
+// ─── PDF REPORT GENERATOR ─────────────────────────────────────────────────────
+
+async function generateMonthlyReport(clinic: Clinic) {
+  // Dynamic import so jsPDF is not in the initial bundle
+  const { jsPDF } = await import('jspdf') as { jsPDF: typeof JsPDFType };
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  const now       = new Date();
+  const monthName = now.toLocaleString('default', { month: 'long' });
+  const year      = now.getFullYear();
+  const today     = now.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  const navy      = [38, 34, 98]   as [number, number, number];
+  const sky       = [39, 170, 225] as [number, number, number];
+  const gray      = [120, 120, 130] as [number, number, number];
+  const lightGray = [245, 245, 247] as [number, number, number];
+  const pageW     = 210;
+  const margin    = 18;
+  const colW      = pageW - margin * 2;
+
+  let y = 0;
+
+  // ── Header band ────────────────────────────────────────────────────────────
+  doc.setFillColor(...navy);
+  doc.rect(0, 0, pageW, 38, 'F');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(255, 255, 255);
+  doc.text('NexaCare Management', margin, 14);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(180, 195, 220);
+  doc.text('CarePath Monthly Performance Report', margin, 21);
+
+  doc.setFontSize(9);
+  doc.setTextColor(140, 160, 200);
+  doc.text(`Clinic: ${clinic.name}  ·  Period: ${monthName} ${year}  ·  Generated: ${today}`, margin, 29);
+
+  // Demo watermark
+  doc.setFontSize(8);
+  doc.setTextColor(...sky);
+  doc.text('DEMO · SYNTHETIC DATA', pageW - margin, 29, { align:'right' });
+
+  y = 48;
+
+  // ── Helper: section heading ─────────────────────────────────────────────────
+  const section = (title: string) => {
+    doc.setFillColor(...lightGray);
+    doc.rect(margin, y, colW, 8, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(...navy);
+    doc.text(title.toUpperCase(), margin + 4, y + 5.5);
+    y += 12;
+  };
+
+  // ── Helper: key-value row ───────────────────────────────────────────────────
+  const kv = (label: string, value: string, highlight = false) => {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(...gray);
+    doc.text(label, margin + 4, y);
+    doc.setFont('helvetica', highlight ? 'bold' : 'normal');
+    doc.setTextColor(highlight ? navy[0] : 30, highlight ? navy[1] : 30, highlight ? navy[2] : 30);
+    doc.text(value, margin + colW - 4, y, { align:'right' });
+    y += 7;
+  };
+
+  // ── Helper: thin rule ───────────────────────────────────────────────────────
+  const rule = () => {
+    doc.setDrawColor(220, 220, 228);
+    doc.setLineWidth(0.2);
+    doc.line(margin, y - 2, margin + colW, y - 2);
+  };
+
+  // ── Section 1: Patient Summary ─────────────────────────────────────────────
+  section('01 — Patient Summary');
+  kv('Total enrolled',       String(clinic.totalEnrolled));
+  rule();
+  kv('Active patients',      String(clinic.activePatients), true);
+  rule();
+  kv('Completed program',    '23');
+  rule();
+  kv('Opted out',            '8');
+  rule();
+  kv('Avg CarePath day',     '45');
+  y += 4;
+
+  // ── Section 2: Message Performance ────────────────────────────────────────
+  section('02 — Message Performance');
+  kv('Total messages sent',  '9');
+  rule();
+  kv('Delivery rate',        '100%', true);
+  rule();
+  kv('Reply rate',           '78%',  true);
+  rule();
+  kv('Avg risk score',       '3.2 / 10');
+  rule();
+  kv('Escalations this month', '0');
+  y += 4;
+
+  // ── Section 3: Phase Distribution ─────────────────────────────────────────
+  section('03 — CarePath Phase Distribution');
+  kv('Activation  (Days 1–42)',      '1 patient');
+  rule();
+  kv('Momentum  (Days 43–84)',       '0 patients');
+  rule();
+  kv('Retention Lock  (Days 85–90)', '0 patients');
+  y += 4;
+
+  // ── Section 4: Recent Activity (table) ────────────────────────────────────
+  section('04 — Recent Activity (Sarah M.)');
+  const delivered = MESSAGE_LOG_P1.filter(m => m.status === 'Delivered').slice(-5);
+
+  // Table header
+  doc.setFillColor(...navy);
+  doc.rect(margin, y, colW, 7, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(255, 255, 255);
+  doc.text('Msg #',    margin + 4,         y + 5);
+  doc.text('Date',     margin + 20,        y + 5);
+  doc.text('Status',   margin + 60,        y + 5);
+  doc.text('Reply',    margin + colW - 4,  y + 5, { align:'right' });
+  y += 9;
+
+  delivered.forEach((m, i) => {
+    if (i % 2 === 0) {
+      doc.setFillColor(...lightGray);
+      doc.rect(margin, y - 4, colW, 7, 'F');
+    }
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(40, 40, 50);
+    doc.text(`#${m.num}`,             margin + 4,         y);
+    doc.text(m.sentAt ?? '—',         margin + 20,        y);
+    doc.setTextColor(...(m.status === 'Delivered' ? [22, 163, 74] as [number,number,number] : gray));
+    doc.text(m.status,                margin + 60,        y);
+    doc.setTextColor(40, 40, 50);
+    doc.text(m.reply ?? '—',          margin + colW - 4,  y, { align:'right' });
+    y += 7;
+  });
+  y += 4;
+
+  // ── Section 5: Billing Summary ─────────────────────────────────────────────
+  section('05 — Billing Summary');
+  kv('Active patients',  String(clinic.activePatients));
+  rule();
+  kv('PMPM rate',        `$${clinic.pmpmRate}.00`);
+  rule();
+  kv("This month's fee", `$${clinic.mrr.toLocaleString()}`, true);
+  rule();
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9.5);
+  doc.setTextColor(...sky);
+  doc.text('Status', margin + 4, y);
+  doc.text('Paid', margin + colW - 4, y, { align:'right' });
+  y += 10;
+
+  // ── Footer ──────────────────────────────────────────────────────────────────
+  const footerY = 282;
+  doc.setDrawColor(...navy);
+  doc.setLineWidth(0.4);
+  doc.line(margin, footerY, margin + colW, footerY);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(...navy);
+  doc.text('NexaCare Management, LLC', margin, footerY + 5);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...gray);
+  doc.text('nexacaremanagement.com', margin, footerY + 10);
+  doc.text('Confidential — for clinic use only', margin + colW, footerY + 5, { align:'right' });
+
+  // ── Save ────────────────────────────────────────────────────────────────────
+  const fileName = `NexaCare-CarePath-Report-${monthName}-${year}.pdf`;
+  doc.save(fileName);
+}
+
+// ─── ENROLLMENT LINKS (patient self-enrollment) ───────────────────────────────
+
+const FORM_IDS: Record<'EN' | 'ES' | 'FR', string> = {
+  EN: 'g2WVfC0n',
+  ES: 'IpwsVhZw',
+  FR: 'UbYJjIEG',
+};
+const LANG_LABELS: Record<'EN' | 'ES' | 'FR', string> = {
+  EN: 'English',
+  ES: 'Español',
+  FR: 'Français',
+};
+
+function EnrollmentLinks({ clinic }: { clinic: Clinic }) {
+  const [copied, setCopied] = useState<'EN' | 'ES' | 'FR' | null>(null);
+
+  function buildUrl(lang: 'EN' | 'ES' | 'FR') {
+    const base = `https://form.typeform.com/to/${FORM_IDS[lang]}`;
+    const params = `clinic_id=${encodeURIComponent(clinic.id)}&clinic_name=${encodeURIComponent(clinic.name)}`;
+    return `${base}#${params}`;
+  }
+
+  function copyLink(lang: 'EN' | 'ES' | 'FR') {
+    navigator.clipboard.writeText(buildUrl(lang)).then(() => {
+      setCopied(lang);
+      setTimeout(() => setCopied(null), 2000);
+    });
+  }
+
+  return (
+    <div style={{ marginTop:24, padding:16, borderRadius:10, background:'rgba(255,255,255,0.04)', border:`1px solid ${C.border}` }}>
+      <p style={{ fontSize:11, fontWeight:600, color: C.muted, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:12 }}>
+        Patient Self-Enrollment Links
+      </p>
+      <p style={{ fontSize:12, color: C.dim, marginBottom:14, lineHeight:1.5 }}>
+        Share these links with patients so they can enroll themselves — clinic context is pre-filled automatically.
+      </p>
+      <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+        {(['EN', 'ES', 'FR'] as const).map(lang => (
+          <div key={lang} style={{ display:'flex', alignItems:'center', gap:10 }}>
+            <span style={{ width:72, fontSize:11, fontWeight:600, color: C.sky }}>{LANG_LABELS[lang]}</span>
+            <div style={{
+              flex:1, fontSize:11, color: C.dim, background:'rgba(0,0,0,0.25)',
+              borderRadius:6, padding:'6px 10px', fontFamily:'monospace',
+              overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis',
+            }}>
+              {buildUrl(lang)}
+            </div>
+            <button
+              onClick={() => copyLink(lang)}
+              style={{
+                flexShrink:0, padding:'5px 12px', fontSize:11, fontWeight:600,
+                borderRadius:6, border:'none', cursor:'pointer',
+                background: copied === lang ? 'rgba(39,170,225,0.2)' : 'rgba(255,255,255,0.08)',
+                color: copied === lang ? C.sky : C.dim,
+                transition:'all 0.15s',
+              }}
+            >
+              {copied === lang ? '✓ Copied' : 'Copy'}
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── CLINIC OVERVIEW TAB ──────────────────────────────────────────────────────
 
 function ClinicOverviewTab({ clinic }: { clinic: Clinic }) {
@@ -430,10 +680,39 @@ function ClinicOverviewTab({ clinic }: { clinic: Clinic }) {
       </div>
 
       {/* Quick Actions */}
-      <div style={{ display:'flex', gap:12, marginTop:24, flexWrap:'wrap' }}>
-        <button style={{ background: C.sky, color:'#0a0916', border:'none', borderRadius:8, padding:'10px 20px', fontSize:13, fontWeight:600, cursor:'pointer' }}>+ Enroll New Patient</button>
-        <button style={{ background:'transparent', color:'rgba(255,255,255,0.6)', border:`1px solid ${C.border}`, borderRadius:8, padding:'10px 20px', fontSize:13, fontWeight:500, cursor:'pointer' }}>Download Monthly Report</button>
+      <div style={{ marginTop:24 }}>
+        <div style={{ display:'flex', gap:12, flexWrap:'wrap' }}>
+          {/* Button 1 — Enroll New Patient (Typeform popup — stays on portal) */}
+          <PopupButton
+            id="g2WVfC0n"
+            hidden={{ clinic_id: clinic.id, clinic_name: clinic.name }}
+            autoClose={2500}
+            style={{
+              background: C.sky, color:'#0a0916', border:'none', borderRadius:8,
+              padding:'10px 20px', fontSize:13, fontWeight:600, cursor:'pointer',
+              display:'inline-flex', alignItems:'center', gap:6,
+            }}
+          >
+            + Enroll New Patient
+          </PopupButton>
+
+          {/* Button 2 — Download Monthly Report */}
+          <button
+            onClick={() => generateMonthlyReport(clinic)}
+            style={{ background:'transparent', color:'rgba(255,255,255,0.6)', border:`1px solid ${C.border}`, borderRadius:8, padding:'10px 20px', fontSize:13, fontWeight:500, cursor:'pointer' }}
+          >
+            Download Monthly Report
+          </button>
+        </div>
+
+        {/* Enroll helper text */}
+        <p style={{ fontSize:11, color: C.muted, marginTop:8 }}>
+          Opens patient intake form — patients complete this on their device
+        </p>
       </div>
+
+      {/* Patient Self-Enrollment Links */}
+      <EnrollmentLinks clinic={clinic} />
     </div>
   );
 }
@@ -1554,17 +1833,30 @@ function AdminGate({
   const [input, setInput] = useState('');
   const [error, setError] = useState(false);
   const [shake, setShake] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const attempt = () => {
-    const secret = process.env.NEXT_PUBLIC_PORTAL_ADMIN_KEY ?? '';
-    if (secret && input === secret) {
-      // Remember in sessionStorage so the gate doesn't re-fire this session
-      sessionStorage.setItem('nxc_admin_unlocked', '1');
-      onSuccess();
-    } else {
+  const attempt = async () => {
+    if (!input.trim() || loading) return;
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/check-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: input }),
+      });
+      if (res.ok) {
+        // Remember in sessionStorage so the gate doesn't re-fire this session
+        sessionStorage.setItem('nxc_admin_unlocked', '1');
+        onSuccess();
+      } else {
+        setError(true);
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+      }
+    } catch {
       setError(true);
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1640,10 +1932,11 @@ function AdminGate({
           <button onClick={attempt} style={{
             flex: 2, padding: '11px 0',
             background: '#27AAE1', border: 'none',
-            borderRadius: 8, cursor: 'pointer',
+            borderRadius: 8, cursor: loading ? 'wait' : 'pointer',
             fontSize: 13, fontWeight: 700, color: '#0a0916',
+            opacity: loading ? 0.7 : 1,
           }}>
-            Unlock Admin →
+            {loading ? 'Checking…' : 'Unlock Admin →'}
           </button>
         </div>
       </div>
@@ -1796,17 +2089,34 @@ export default function PortalDemo() {
 
             {/* Center - view switcher */}
             <div style={{ display:'flex', gap:4, background:'rgba(255,255,255,0.06)', borderRadius:8, padding:3 }}>
-              {(['clinic','admin'] as const).map(v => (
-                <button key={v} onClick={() => switchView(v)}
-                  style={{
-                    padding:'6px 16px', borderRadius:6, border:'none', cursor:'pointer', fontSize:12, fontWeight:600,
-                    background: view === v ? C.sky : 'transparent',
-                    color: view === v ? C.topbar : 'rgba(255,255,255,0.4)',
-                    transition:'all 0.2s',
-                  }}>
-                  {v === 'clinic' ? '🏥 Clinic Portal' : '⚙ Admin Portal'}
-                </button>
-              ))}
+              {(['clinic','admin'] as const).map(v => {
+                const active = view === v;
+                return (
+                  <button key={v} onClick={() => switchView(v)}
+                    style={{
+                      display:'flex', alignItems:'center', gap:6,
+                      padding:'6px 14px', borderRadius:6, border:'none', cursor:'pointer', fontSize:12, fontWeight:600,
+                      background: active ? C.sky : 'transparent',
+                      color: active ? C.topbar : 'rgba(255,255,255,0.4)',
+                      transition:'all 0.2s',
+                    }}>
+                    {v === 'clinic' ? (
+                      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="1" y="6" width="14" height="9" rx="1" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+                        <path d="M5 15V11h6v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                        <path d="M1 7L8 1l7 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <rect x="6.25" y="7.5" width="3.5" height="3" rx="0.5" stroke="currentColor" strokeWidth="1.2" fill="none"/>
+                      </svg>
+                    ) : (
+                      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 1L2 3.5V8c0 3.3 2.6 5.7 6 7 3.4-1.3 6-3.7 6-7V3.5L8 1Z" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinejoin="round"/>
+                        <path d="M5.5 8l1.8 1.8L10.5 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                    {v === 'clinic' ? 'Clinic Portal' : 'Admin Portal'}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Right */}

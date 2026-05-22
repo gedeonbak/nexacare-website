@@ -15,7 +15,7 @@ const included = [
 const tiers = [
   {
     label: "83 patients",
-    sublabel: "Breakeven",
+    sublabel: "Entry scale",
     revenue: "$7,221",
     cogs: "($2,166)",
     gross: "$5,055",
@@ -35,7 +35,7 @@ const tiers = [
   },
   {
     label: "500 patients",
-    sublabel: "Series A milestone",
+    sublabel: "Growth scale",
     revenue: "$43,500",
     cogs: "($13,050)",
     gross: "$30,450",
@@ -206,7 +206,7 @@ export default function PricingClient() {
                 {(
                   [
                     { label: "Monthly Revenue", key: "revenue" as const, bold: true },
-                    { label: "COGS (NexaCare fee)", key: "cogs" as const, bold: false },
+                    { label: "NexaCare fee", key: "cogs" as const, bold: false },
                     { label: "Gross Profit", key: "gross" as const, bold: true },
                     { label: "Clinic fixed costs (est.)", key: "fixed" as const, bold: false },
                     { label: "Net to clinic", key: "net" as const, bold: true },

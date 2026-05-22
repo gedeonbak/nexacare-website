@@ -23,6 +23,7 @@ import {
 import { updateMessageWithReply } from '@/lib/messageLog';
 import { analyzeReply, escalationFromScore } from '@/lib/carepath-schedule';
 import { validateTwilioSignature, twimlEmpty, twimlReply } from '@/lib/twilio';
+import { postSlack, optOutBlocks, escalationBlocks } from '@/lib/slack';
 
 const XML_HEADERS = { 'Content-Type': 'text/xml; charset=utf-8' };
 
@@ -97,6 +98,14 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.error('[inbound] opt-out status update failed:', err instanceof Error ? err.message : err);
     }
+
+    // Alert #escalations — fire-and-forget
+    postSlack(
+      'escalations',
+      [],
+      `⚠️ *Patient Opt-Out*\nPatient: ${patient.first_name}\nClinic: ${patient.clinic_name}\nCarePath day: ${patient.carepath_day}`,
+    ).catch(err => console.error('[inbound] opt-out Slack failed:', err instanceof Error ? err.message : err));
+
     const msg = RESPONSES.optOut[lang] ?? RESPONSES.optOut.EN;
     return new Response(twimlReply(msg), { status: 200, headers: XML_HEADERS });
   }
@@ -133,6 +142,19 @@ export async function POST(req: NextRequest) {
     );
   } catch (err) {
     console.error('[inbound] risk score update failed:', err instanceof Error ? err.message : err);
+  }
+
+  // ── Slack escalation alert if risk ≥ 7 and newly escalated ───────────────
+  const prevEscalation = patient.escalation_status;
+  const escalationRaised = escalation !== prevEscalation &&
+    (escalation === 'Monitoring' || escalation === 'Founder Alerted');
+
+  if (newScore >= 7 || escalation === 'Founder Alerted') {
+    postSlack(
+      'escalations',
+      [],
+      `🚨 *CarePath Escalation*\nPatient: ${patient.first_name}\nClinic: ${patient.clinic_name}\nRisk score: ${newScore}\nReply: [${analysis.sentiment}] ${replyBody.slice(0, 80)}\nCarePath day: ${patient.carepath_day}\nAction required: check RDS`,
+    ).catch(err => console.error('[inbound] escalation Slack failed:', err instanceof Error ? err.message : err));
   }
 
   // ── Auto-respond if high-risk sentiment ───────────────────────────────────

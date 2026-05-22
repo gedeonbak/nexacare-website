@@ -429,10 +429,10 @@ export default async function Home() {
                 }}
               >
                 {[
-                  { val: "$75–99", lbl: "PMPM Revenue",    sky: true  },
-                  { val: "70%+",   lbl: "Gross Margin Y1", sky: false },
-                  { val: "83 pts", lbl: "Breakeven",        sky: true  },
-                  { val: "$40K",   lbl: "MRR Target Mo9",  sky: false },
+                  { val: "$75–99", lbl: "PMPM Pricing",      sky: true  },
+                  { val: "70%+",   lbl: "Clinic Gross Margin", sky: false },
+                  { val: "90 days", lbl: "CarePath Program",  sky: true  },
+                  { val: "3 States", lbl: "Launch Markets",   sky: false },
                 ].map((m, i) => (
                   <div
                     key={i}
