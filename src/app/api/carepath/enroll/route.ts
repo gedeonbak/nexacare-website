@@ -17,6 +17,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createPatient } from '@/lib/patients';
+import { postSlack, newEnrollmentBlocks } from '@/lib/slack';
 
 export async function POST(req: NextRequest) {
   // ── Auth ───────────────────────────────────────────────────────────────────
@@ -108,6 +109,13 @@ export async function POST(req: NextRequest) {
       hubspotContactId:
         typeof hubspotContactId === 'string' ? hubspotContactId : undefined,
     });
+
+    // Fire-and-forget Slack alert — never blocks the response
+    postSlack(
+      'leads',
+      [],
+      `✅ *New Patient Enrolled*\nName: ${firstName.trim()}\nClinic: ${clinicName}\nLanguage: ${lang}\nCarePath Day 1 SMS: sent`,
+    ).catch(err => console.error('[enroll] Slack alert failed:', err instanceof Error ? err.message : err));
 
     return NextResponse.json({ success: true, patient }, { status: 201 });
   } catch (error) {
