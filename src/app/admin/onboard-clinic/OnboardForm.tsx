@@ -105,15 +105,21 @@ export default function OnboardForm() {
         body:    JSON.stringify(form),
       });
 
-      const json = await res.json() as Result & { error?: string };
+      let json: Result & { error?: string; warning?: string };
+      try {
+        json = await res.json();
+      } catch {
+        setError(`Server error ${res.status} — check Vercel logs for details`);
+        return;
+      }
 
       if (!res.ok) {
         setError(json.error ?? `Server error (${res.status})`);
       } else {
         setResult(json);
       }
-    } catch {
-      setError('Network error — please try again');
+    } catch (err) {
+      setError(`Network error — ${err instanceof Error ? err.message : 'please try again'}`);
     } finally {
       setLoading(false);
     }
