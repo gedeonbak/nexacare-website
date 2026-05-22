@@ -14,8 +14,14 @@
 //   AIRTABLE_API_KEY      - personal access token from airtable.com/account
 //   AIRTABLE_BASE_ID      - found in the API docs URL for your base
 
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY ?? '';
-const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID ?? '';
+// Strip BOM (U+FEFF) and whitespace — Windows editors sometimes prepend an
+// invisible BOM that causes "Cannot convert argument to a ByteString" in fetch.
+function stripBom(s: string): string {
+  // eslint-disable-next-line no-control-regex
+  return s.charCodeAt(0) === 0xFEFF ? s.slice(1).trim() : s.trim();
+}
+const AIRTABLE_API_KEY = stripBom(process.env.AIRTABLE_API_KEY ?? '');
+const AIRTABLE_BASE_ID = stripBom(process.env.AIRTABLE_BASE_ID ?? '');
 const BASE_URL = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}`;
 
 async function airtableFetch<T>(
