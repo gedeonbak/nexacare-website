@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     httpOnly: true,
     secure:   process.env.NODE_ENV === 'production',
     sameSite: 'lax',
-    path:     '/admin',
+    path:     '/',   // must be '/' so the cookie is sent to /api/admin/* routes
     maxAge:   8 * 60 * 60,
   });
 
