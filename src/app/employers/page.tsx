@@ -195,47 +195,48 @@ export default function EmployersPage() {
           background: rgba(39,170,225,0.08);
         }
 
-        /* Hero stat cards */
-        .emp-stat-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 16px;
-        }
-
-        .emp-stat {
-          background: rgba(255,255,255,0.04);
+        /* Hero evidence column */
+        .emp-evidence {
+          display: flex;
+          flex-direction: column;
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 12px;
-          padding: 24px;
-          transition: border-color 0.2s, background 0.2s;
+          overflow: hidden;
         }
 
-        .emp-stat:hover {
-          border-color: rgba(39,170,225,0.3);
-          background: rgba(39,170,225,0.05);
+        .emp-evidence-item {
+          padding: 18px 22px;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          transition: background 0.15s;
         }
 
-        .emp-stat-val {
-          font-family: var(--serif);
-          font-size: 36px;
-          font-weight: 700;
-          color: var(--sky);
-          line-height: 1;
-          margin-bottom: 8px;
+        .emp-evidence-item:last-child {
+          border-bottom: none;
         }
 
-        .emp-stat-label {
-          font-size: 12px;
-          color: var(--muted);
-          line-height: 1.5;
-          font-weight: 400;
+        .emp-evidence-item:hover {
+          background: rgba(255,255,255,0.03);
         }
 
-        .emp-stat-source {
-          font-size: 10px;
-          color: rgba(255,255,255,0.3);
-          margin-top: 6px;
+        .emp-evidence-source {
           font-family: var(--mono);
+          font-size: 10px;
+          color: rgba(255,255,255,0.45);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          margin-bottom: 6px;
+        }
+
+        .emp-evidence-body {
+          font-size: 13px;
+          line-height: 1.55;
+          color: rgba(255,255,255,0.85);
+          font-weight: 300;
+        }
+
+        .emp-evidence-num {
+          font-weight: 600;
+          color: var(--sky);
         }
 
         /* ── PROBLEM SECTION ── */
@@ -434,7 +435,7 @@ export default function EmployersPage() {
 
         .roi-note {
           font-size: 11px;
-          color: rgba(255,255,255,0.3);
+          color: rgba(255,255,255,0.45);
           margin-top: 16px;
           line-height: 1.5;
         }
@@ -622,7 +623,7 @@ export default function EmployersPage() {
 
         .form-disclaimer {
           font-size: 11px;
-          color: rgba(255,255,255,0.3);
+          color: rgba(255,255,255,0.45);
           line-height: 1.5;
           max-width: 360px;
         }
@@ -719,26 +720,22 @@ export default function EmployersPage() {
               </div>
             </div>
 
-            <div className="emp-stat-grid">
-              <div className="emp-stat">
-                <div className="emp-stat-val">~50%</div>
-                <div className="emp-stat-label">of GLP-1 patients discontinue within 12 months without structured support</div>
-                <div className="emp-stat-source">Rodriguez et al., JAMA Network Open 2025</div>
+            <div className="emp-evidence">
+              <div className="emp-evidence-item">
+                <div className="emp-evidence-source">Rodriguez et al. · JAMA Network Open 2025</div>
+                <div className="emp-evidence-body"><span className="emp-evidence-num">~50%</span> of GLP-1 patients discontinue within 12 months without structured engagement support</div>
               </div>
-              <div className="emp-stat">
-                <div className="emp-stat-val">$6K+</div>
-                <div className="emp-stat-label">average annual GLP-1 cost per covered employee on the medication</div>
-                <div className="emp-stat-source">EBRI Actuarial Analysis 2025</div>
+              <div className="emp-evidence-item">
+                <div className="emp-evidence-source">EBRI Actuarial Analysis 2025</div>
+                <div className="emp-evidence-body"><span className="emp-evidence-num">$6,000+</span> average annual drug cost per covered employee currently on a GLP-1 medication</div>
               </div>
-              <div className="emp-stat">
-                <div className="emp-stat-val">20.8%</div>
-                <div className="emp-stat-label">of large employer specialty drug budgets now consumed by GLP-1s</div>
-                <div className="emp-stat-source">Greenway Health / MedCity News, May 2026</div>
+              <div className="emp-evidence-item">
+                <div className="emp-evidence-source">Greenway Health · MedCity News, May 2026</div>
+                <div className="emp-evidence-body"><span className="emp-evidence-num">20.8%</span> of large employer specialty drug budgets now consumed by GLP-1 prescriptions</div>
               </div>
-              <div className="emp-stat">
-                <div className="emp-stat-val">90d</div>
-                <div className="emp-stat-label">CarePath engagement window — the critical period where dropout risk is highest</div>
-                <div className="emp-stat-source">NexaCare CarePath Protocol</div>
+              <div className="emp-evidence-item">
+                <div className="emp-evidence-source">NexaCare CarePath Protocol</div>
+                <div className="emp-evidence-body">First <span className="emp-evidence-num">90 days</span> — the critical engagement window when dropout risk peaks and structured support matters most</div>
               </div>
             </div>
           </section>
@@ -932,8 +929,9 @@ export default function EmployersPage() {
                 <>
                   <div className="form-grid">
                     <div className="form-field">
-                      <label className="form-label">First name <span>*</span></label>
+                      <label htmlFor="firstName" className="form-label">First name <span>*</span></label>
                       <input
+                        id="firstName"
                         className="form-input"
                         name="firstName"
                         value={formData.firstName}
@@ -942,8 +940,9 @@ export default function EmployersPage() {
                       />
                     </div>
                     <div className="form-field">
-                      <label className="form-label">Last name <span>*</span></label>
+                      <label htmlFor="lastName" className="form-label">Last name <span>*</span></label>
                       <input
+                        id="lastName"
                         className="form-input"
                         name="lastName"
                         value={formData.lastName}
@@ -952,8 +951,9 @@ export default function EmployersPage() {
                       />
                     </div>
                     <div className="form-field">
-                      <label className="form-label">Work email <span>*</span></label>
+                      <label htmlFor="email" className="form-label">Work email <span>*</span></label>
                       <input
+                        id="email"
                         className="form-input"
                         name="email"
                         type="email"
@@ -963,8 +963,9 @@ export default function EmployersPage() {
                       />
                     </div>
                     <div className="form-field">
-                      <label className="form-label">Company <span>*</span></label>
+                      <label htmlFor="company" className="form-label">Company <span>*</span></label>
                       <input
+                        id="company"
                         className="form-input"
                         name="company"
                         value={formData.company}
@@ -973,8 +974,9 @@ export default function EmployersPage() {
                       />
                     </div>
                     <div className="form-field">
-                      <label className="form-label">Number of employees</label>
+                      <label htmlFor="employeeCount" className="form-label">Number of employees</label>
                       <select
+                        id="employeeCount"
                         className="form-select"
                         name="employeeCount"
                         value={formData.employeeCount}
@@ -988,8 +990,9 @@ export default function EmployersPage() {
                       </select>
                     </div>
                     <div className="form-field">
-                      <label className="form-label">Your role</label>
+                      <label htmlFor="role" className="form-label">Your role</label>
                       <select
+                        id="role"
                         className="form-select"
                         name="role"
                         value={formData.role}
@@ -1005,8 +1008,9 @@ export default function EmployersPage() {
                       </select>
                     </div>
                     <div className="form-field full">
-                      <label className="form-label">What&apos;s your main concern with GLP-1 spend? (optional)</label>
+                      <label htmlFor="message" className="form-label">What&apos;s your main concern with GLP-1 spend? (optional)</label>
                       <textarea
+                        id="message"
                         className="form-textarea"
                         name="message"
                         value={formData.message}
