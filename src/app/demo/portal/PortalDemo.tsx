@@ -277,23 +277,18 @@ interface StatCardProps {
   delta?: string;
   deltaUp?: boolean;
   accent?: string;
-  pulse?: boolean;
 }
 
-function StatCard({ label, value, sub, delta, deltaUp, accent, pulse }: StatCardProps) {
+function StatCard({ label, value, sub, delta, deltaUp, accent }: StatCardProps) {
   return (
     <div style={{
-      background: C.card,
-      border: `1px solid ${accent ? accent + '40' : C.border}`,
+      background: accent ? `${accent}08` : C.card,
+      border: `1px solid ${accent ? accent + '30' : C.border}`,
       borderRadius: 12,
       padding: '20px 24px',
-      position: 'relative',
-      overflow: 'hidden',
     }}>
-      {accent && <div style={{ position:'absolute', top:0, left:0, width:3, height:'100%', background: accent, borderRadius:'12px 0 0 12px' }} />}
       <div style={{ fontSize:11, fontWeight:600, letterSpacing:'0.08em', textTransform:'uppercase', color: C.muted, marginBottom:8 }}>{label}</div>
-      <div style={{ fontFamily:"'Playfair Display',serif", fontSize:36, fontWeight:700, color: accent || 'white', lineHeight:1, marginBottom:6,
-                    ...(pulse ? { animation:'pulse 2s infinite' } : {}) }}>
+      <div style={{ fontFamily:"'Playfair Display',serif", fontSize:36, fontWeight:700, color: accent || 'white', lineHeight:1, marginBottom:6 }}>
         {value}
       </div>
       {sub && <div style={{ fontSize:12, color: C.muted }}>{sub}</div>}
@@ -594,7 +589,7 @@ function EnrollmentLinks({ clinic }: { clinic: Clinic }) {
                 borderRadius:6, border:'none', cursor:'pointer',
                 background: copied === lang ? 'rgba(39,170,225,0.2)' : 'rgba(255,255,255,0.08)',
                 color: copied === lang ? C.sky : C.dim,
-                transition:'all 0.15s',
+                transition:'background 0.15s, color 0.15s',
               }}
             >
               {copied === lang ? '✓ Copied' : 'Copy'}
@@ -1202,7 +1197,7 @@ function AdminDashboardTab({ activeEscalationCount }: { activeEscalationCount: n
         <StatCard label="Active Patients" value="271" sub="Across 3 clinics" />
         <StatCard label="Active Clinics" value="3" sub="2 active · 1 onboarding" />
         <StatCard label="Avg Churn Rate" value="4.1%" sub="Target: < 5%" />
-        <StatCard label="Escalations" value={String(activeEscalationCount)} accent={C.danger} pulse />
+        <StatCard label="Escalations" value={String(activeEscalationCount)} accent={C.danger} />
         <StatCard label="Messages Today" value="12" sub="4 replies received" />
       </div>
 
@@ -2054,14 +2049,6 @@ export default function PortalDemo() {
 
   return (
     <>
-      {/* Pulse keyframe injected inline */}
-      <style>{`
-        @keyframes nexaPulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-      `}</style>
-
       <div style={{ display:'flex', flexDirection:'column', minHeight:'100vh', background: C.bg }}>
         {/* Demo header */}
         <DemoHeader />
@@ -2098,7 +2085,7 @@ export default function PortalDemo() {
                       padding:'6px 14px', borderRadius:6, border:'none', cursor:'pointer', fontSize:12, fontWeight:600,
                       background: active ? C.sky : 'transparent',
                       color: active ? C.topbar : 'rgba(255,255,255,0.4)',
-                      transition:'all 0.2s',
+                      transition:'background 0.15s, color 0.15s',
                     }}>
                     {v === 'clinic' ? (
                       <svg width="13" height="13" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2170,15 +2157,13 @@ export default function PortalDemo() {
                         padding:'9px 12px', marginBottom:2, display:'flex', alignItems:'center', gap:9,
                         background: isActive ? 'rgba(39,170,225,0.12)' : 'transparent',
                         color: isActive ? C.sky : 'rgba(255,255,255,0.45)',
-                        borderLeft: isActive ? `2px solid ${C.sky}` : '2px solid transparent',
-                        marginLeft:'-2px',
-                        transition:'all 0.15s',
+                        transition:'background 0.15s, color 0.15s',
                         fontSize:13, fontWeight: isActive ? 600 : 400,
                       }}>
                       <tab.Icon size={15} />
                       <span style={{ flex:1 }}>{tab.label}</span>
                       {badgeCount > 0 && (
-                        <span style={{ fontSize:10, fontWeight:700, padding:'1px 6px', borderRadius:100, background:'rgba(239,68,68,0.3)', color: C.danger, animation:'nexaPulse 2s infinite' }}>
+                        <span style={{ fontSize:10, fontWeight:700, padding:'1px 6px', borderRadius:100, background:'rgba(239,68,68,0.25)', color: C.danger }}>
                           {badgeCount}
                         </span>
                       )}
