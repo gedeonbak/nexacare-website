@@ -88,20 +88,6 @@ export default function Nav() {
               style={{ objectFit: "contain" }}
             />
           )}
-          <span
-            className="hidden md:block"
-            style={{
-              fontSize: "10px",
-              color: "#27AAE1",
-              fontWeight: 400,
-              letterSpacing: "0.06em",
-              opacity: 0.9,
-              fontFamily: "'DM Sans', system-ui, sans-serif",
-              marginTop: "2px",
-            }}
-          >
-            The operating system for independent clinics.
-          </span>
         </Link>
 
         {/* ── CENTER — Desktop links ── */}
