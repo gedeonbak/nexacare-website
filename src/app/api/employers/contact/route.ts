@@ -8,13 +8,24 @@ interface EmployerContact {
   employeeCount?: string;
   role?: string;
   message?: string;
+  // UTM attribution (per _UTM_Convention.md — Morgan, 2026-05-28).
+  // Captured client-side on /employers, forwarded here for HubSpot + Slack mirror.
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  utm_term?: string;
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body: EmployerContact = await req.json();
 
-    const { firstName, lastName, email, company, employeeCount, role, message } = body;
+    const {
+      firstName, lastName, email, company, employeeCount, role, message,
+      utm_source = '', utm_medium = '', utm_campaign = '',
+      utm_content = '', utm_term = '',
+    } = body;
 
     if (!firstName || !lastName || !email || !company) {
       return NextResponse.json(
@@ -60,6 +71,15 @@ export async function POST(req: NextRequest) {
                 lifecyclestage: 'lead',
                 lead_source: 'Employer Landing Page',
                 message: message || '',
+                // UTM attribution — internal names must exist on HubSpot
+                // Contact schema (Portal 245192764). Property type:
+                // Single-line text, group Marketing. If missing, HubSpot
+                // silently drops them and Slack still shows the values.
+                utm_source,
+                utm_medium,
+                utm_campaign,
+                utm_content,
+                utm_term,
               },
             }),
           }
@@ -86,6 +106,14 @@ export async function POST(req: NextRequest) {
                   jobtitle: role || '',
                   hs_lead_status: 'NEW',
                   lead_source: 'Employer Landing Page',
+                  // Always overwrite UTMs on update — last-touch attribution
+                  // per Morgan's convention. Returning visitors who convert
+                  // via a newer campaign get credited to the newer campaign.
+                  utm_source,
+                  utm_medium,
+                  utm_campaign,
+                  utm_content,
+                  utm_term,
                 },
               }),
             }
@@ -164,6 +192,27 @@ export async function POST(req: NextRequest) {
                     },
                   ]
                 : []),
+              {
+                type: 'section',
+                fields: [
+                  {
+                    type: 'mrkdwn',
+                    text: `*UTM Source:*\n${utm_source || '_direct_'}`,
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*UTM Medium:*\n${utm_medium || '_n/a_'}`,
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*UTM Campaign:*\n${utm_campaign || '_n/a_'}`,
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*UTM Content:*\n${utm_content || '_n/a_'}`,
+                  },
+                ],
+              },
               {
                 type: 'section',
                 text: {

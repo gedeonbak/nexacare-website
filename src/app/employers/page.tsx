@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { captureUTM, getStoredUTM } from '@/lib/utm';
 
 export default function EmployersPage() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,13 @@ export default function EmployersPage() {
   });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Capture UTMs from URL on mount → sessionStorage + 90-day cookie.
+  // Per _UTM_Convention.md: last-touch overwrite, attribution carries
+  // across in-tab SPA nav AND returning-visitor sessions (90d).
+  useEffect(() => {
+    captureUTM();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -32,10 +40,13 @@ export default function EmployersPage() {
     setErrorMessage('');
 
     try {
+      // Merge captured UTMs into submission payload.
+      // Empty strings flow through cleanly to HubSpot + Slack for direct/organic traffic.
+      const utm = getStoredUTM();
       const res = await fetch('/api/employers/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, ...utm }),
       });
 
       if (!res.ok) throw new Error('Submission failed');
