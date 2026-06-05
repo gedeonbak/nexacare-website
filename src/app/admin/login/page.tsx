@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Stethoscope } from 'lucide-react';
 
 const C = {
   bg: '#0f0e1a',
@@ -77,8 +78,8 @@ export default function AdminLoginPage() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 18,
-            }}>⚕</div>
+              color: 'white',
+            }}><Stethoscope size={18} strokeWidth={1.75} /></div>
             <span style={{ fontSize: 20, fontWeight: 700, color: C.text }}>NexaCare</span>
           </div>
           <p style={{ fontSize: 13, color: C.muted, margin: 0 }}>Internal Admin Access</p>

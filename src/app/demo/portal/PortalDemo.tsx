@@ -11,6 +11,7 @@ import {
   LayoutDashboard, Users, MessageSquare, CreditCard,
   Building2, AlertTriangle, Activity, Receipt, TrendingUp,
   ChevronRight, CheckCircle2, ArrowLeft, Clock, ExternalLink,
+  Lock,
 } from 'lucide-react';
 import {
   AreaChart, BarChart, LineChart, ResponsiveContainer,
@@ -1879,8 +1880,8 @@ function AdminGate({
             border: '1px solid rgba(39,170,225,0.25)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 16px',
-            fontSize: 20,
-          }}>🔐</div>
+            color: '#27AAE1',
+          }}><Lock size={20} strokeWidth={1.75} /></div>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: 'white', marginBottom: 6 }}>
             Admin Access
           </h2>

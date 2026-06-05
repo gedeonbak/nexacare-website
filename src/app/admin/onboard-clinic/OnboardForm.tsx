@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Stethoscope } from 'lucide-react';
 
 const C = {
   bg: '#0f0e1a',
@@ -282,8 +283,8 @@ export default function OnboardForm() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 16,
-          }}>⚕</div>
+            color: 'white',
+          }}><Stethoscope size={16} strokeWidth={1.75} /></div>
           <span style={{ fontSize: 16, fontWeight: 700, color: C.text }}>NexaCare Admin</span>
         </div>
         <button

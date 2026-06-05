@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { PopupButton } from '@typeform/embed-react';
+import { Monitor, Smartphone, Stethoscope, Users } from 'lucide-react';
 import type { Patient } from '@/lib/patients';
 
 // ── Color palette (matches demo portal) ──────────────────────────────────────
@@ -244,8 +245,8 @@ export default function PortalShell({ clinicId, clinicName, patients, stats }: P
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 15,
-          }}>⚕</div>
+            color: 'white',
+          }}><Stethoscope size={15} strokeWidth={1.75} /></div>
           <span style={{ fontSize: 14, fontWeight: 700, color: C.text }}>CarePath</span>
         </div>
 
@@ -425,7 +426,7 @@ export default function PortalShell({ clinicId, clinicName, patients, stats }: P
                 padding: '48px 24px',
                 textAlign: 'center',
               }}>
-                <p style={{ fontSize: 32, margin: '0 0 12px' }}>👥</p>
+                <p style={{ margin: '0 0 12px', color: C.muted, display: 'flex', justifyContent: 'center' }}><Users size={32} strokeWidth={1.5} /></p>
                 <p style={{ fontSize: 16, fontWeight: 600, color: C.text, margin: '0 0 8px' }}>
                   No patients yet
                 </p>
@@ -591,7 +592,7 @@ export default function PortalShell({ clinicId, clinicName, patients, stats }: P
                 borderRadius: 12,
                 padding: 28,
               }}>
-                <p style={{ fontSize: 22, margin: '0 0 12px' }}>🖥️</p>
+                <p style={{ margin: '0 0 12px', color: C.sky, display: 'flex' }}><Monitor size={22} strokeWidth={1.75} /></p>
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: C.text, margin: '0 0 8px' }}>
                   Staff-Assisted (EN)
                 </h3>
@@ -626,7 +627,7 @@ export default function PortalShell({ clinicId, clinicName, patients, stats }: P
                 borderRadius: 12,
                 padding: 28,
               }}>
-                <p style={{ fontSize: 22, margin: '0 0 12px' }}>🖥️</p>
+                <p style={{ margin: '0 0 12px', color: C.sky, display: 'flex' }}><Monitor size={22} strokeWidth={1.75} /></p>
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: C.text, margin: '0 0 8px' }}>
                   Staff-Assisted (ES)
                 </h3>
@@ -662,7 +663,7 @@ export default function PortalShell({ clinicId, clinicName, patients, stats }: P
                 padding: 28,
                 gridColumn: 'span 2',
               }}>
-                <p style={{ fontSize: 22, margin: '0 0 12px' }}>📱</p>
+                <p style={{ margin: '0 0 12px', color: C.sky, display: 'flex' }}><Smartphone size={22} strokeWidth={1.75} /></p>
                 <h3 style={{ fontSize: 15, fontWeight: 700, color: C.text, margin: '0 0 8px' }}>
                   Patient Self-Enrollment
                 </h3>

@@ -1,7 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Coins, Stethoscope, TrendingDown } from 'lucide-react';
+import {
+  BarChart3, BellRing, CheckCircle2, Coins,
+  MessageSquare, Scale, Stethoscope, TrendingDown,
+} from 'lucide-react';
 import { captureUTM, getStoredUTM } from '@/lib/utm';
 
 export default function EmployersPage() {
@@ -378,10 +381,10 @@ export default function EmployersPage() {
           border-radius: 50%;
           background: rgba(39,170,225,0.15);
           border: 1px solid rgba(39,170,225,0.3);
+          color: var(--sky);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 14px;
           flex-shrink: 0;
           margin-top: 2px;
         }
@@ -654,8 +657,9 @@ export default function EmployersPage() {
         }
 
         .form-success-icon {
-          font-size: 48px;
+          color: #22c55e;
           margin-bottom: 16px;
+          display: inline-flex;
         }
 
         .form-success-title {
@@ -800,28 +804,28 @@ export default function EmployersPage() {
                 <h2 className="section-headline" style={{ marginBottom: '32px' }}>The operational layer that keeps patients on program</h2>
                 <ul className="solution-list">
                   <li className="solution-item">
-                    <div className="solution-dot">💬</div>
+                    <div className="solution-dot"><MessageSquare size={16} strokeWidth={1.75} /></div>
                     <div>
                       <div className="solution-item-title">CarePath SMS engagement</div>
                       <div className="solution-item-body">20 structured text messages over 90 days. Weekly check-ins, milestone acknowledgments, and side effect education — timed to the moments patients are most likely to quit.</div>
                     </div>
                   </li>
                   <li className="solution-item">
-                    <div className="solution-dot">🚨</div>
+                    <div className="solution-dot"><BellRing size={16} strokeWidth={1.75} /></div>
                     <div>
                       <div className="solution-item-title">Churn detection &amp; escalation</div>
                       <div className="solution-item-body">When a patient signals they&apos;re struggling or considering stopping, the clinic is alerted within 60 seconds. Human intervention at exactly the right moment.</div>
                     </div>
                   </li>
                   <li className="solution-item">
-                    <div className="solution-dot">📊</div>
+                    <div className="solution-dot"><BarChart3 size={16} strokeWidth={1.75} /></div>
                     <div>
                       <div className="solution-item-title">Retention data for employers</div>
                       <div className="solution-item-body">90-day retention rates, reply engagement, and program completion data — anonymized and aggregated for employer reporting.</div>
                     </div>
                   </li>
                   <li className="solution-item">
-                    <div className="solution-dot">⚖️</div>
+                    <div className="solution-dot"><Scale size={16} strokeWidth={1.75} /></div>
                     <div>
                       <div className="solution-item-title">HIPAA-compliant infrastructure</div>
                       <div className="solution-item-body">AWS HIPAA-eligible stack with executed BAA. Patient data never leaves the secure environment. Fully compliant with employer benefit program requirements.</div>
@@ -939,7 +943,7 @@ export default function EmployersPage() {
             <div className="form-wrap">
               {status === 'success' ? (
                 <div className="form-success">
-                  <div className="form-success-icon">✅</div>
+                  <div className="form-success-icon"><CheckCircle2 size={48} strokeWidth={1.75} /></div>
                   <div className="form-success-title">We&apos;ll be in touch within one business day.</div>
                   <div className="form-success-body">
                     Thanks for reaching out. A member of the NexaCare team will contact you at {formData.email} to schedule a 15-minute call.

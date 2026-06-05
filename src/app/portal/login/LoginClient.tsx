@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Check, Stethoscope } from 'lucide-react';
 
 const C = {
   bg: '#0f0e1a',
@@ -90,8 +91,8 @@ export default function LoginClient({ errorCode }: Props) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 18,
-            }}>⚕</div>
+              color: 'white',
+            }}><Stethoscope size={18} strokeWidth={1.75} /></div>
             <span style={{ fontSize: 20, fontWeight: 700, color: C.text }}>CarePath Portal</span>
           </div>
           <p style={{ fontSize: 13, color: C.muted, margin: 0 }}>Clinic Coordinator Access</p>
@@ -124,9 +125,9 @@ export default function LoginClient({ errorCode }: Props) {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 22,
+              color: C.success,
               margin: '0 auto 20px',
-            }}>✓</div>
+            }}><Check size={22} strokeWidth={2.5} /></div>
             <h3 style={{ fontSize: 17, fontWeight: 700, color: C.text, margin: '0 0 8px' }}>
               Check your email
             </h3>

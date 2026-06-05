@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import { ChevronLeft, ChevronRight, PartyPopper, Play, Pause } from "lucide-react";
 import { MESSAGES, type Language } from "@/lib/carepath-messages";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -455,7 +455,7 @@ export default function CarePathDemo() {
                     animation: "completePulse 2s ease infinite",
                   }}
                 >
-                  <p className="text-2xl mb-2">🎉</p>
+                  <p className="mb-2" style={{ color: "#22c55e", display: "flex", justifyContent: "center" }}><PartyPopper size={28} strokeWidth={1.75} /></p>
                   <p className="text-[15px] font-bold" style={{ color: "#166534" }}>
                     90-day program complete
                   </p>
