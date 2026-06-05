@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Coins, Stethoscope, TrendingDown } from 'lucide-react';
 import { captureUTM, getStoredUTM } from '@/lib/utm';
 
 export default function EmployersPage() {
@@ -309,8 +310,16 @@ export default function EmployersPage() {
         }
 
         .problem-icon {
-          font-size: 28px;
+          color: var(--sky);
           margin-bottom: 16px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 44px;
+          height: 44px;
+          border-radius: 10px;
+          background: rgba(39, 170, 225, 0.10);
+          border: 1px solid rgba(39, 170, 225, 0.22);
         }
 
         .problem-title {
@@ -760,21 +769,21 @@ export default function EmployersPage() {
             </p>
             <div className="problem-grid">
               <div className="problem-card">
-                <div className="problem-icon">📉</div>
+                <div className="problem-icon"><TrendingDown size={24} strokeWidth={1.75} /></div>
                 <div className="problem-title">High dropout, zero recovery</div>
                 <div className="problem-body">Real-world GLP-1 adherence at 12 months runs well below clinical trial results. Without behavioral support and check-ins, most patients discontinue in the first 90 days.</div>
                 <div className="problem-num">~50%</div>
                 <div className="problem-num-label">12-month discontinuation rate</div>
               </div>
               <div className="problem-card">
-                <div className="problem-icon">💸</div>
+                <div className="problem-icon"><Coins size={24} strokeWidth={1.75} /></div>
                 <div className="problem-title">Sunk cost, no ROI</div>
                 <div className="problem-body">When a patient quits, the downstream health costs don&apos;t disappear — they defer. Cardiovascular risk, diabetes complications, and lost productivity continue. Your spend produced no durable benefit.</div>
                 <div className="problem-num">$6K+</div>
                 <div className="problem-num-label">annual cost per covered employee</div>
               </div>
               <div className="problem-card">
-                <div className="problem-icon">🏥</div>
+                <div className="problem-icon"><Stethoscope size={24} strokeWidth={1.75} /></div>
                 <div className="problem-title">Clinics can&apos;t fill the gap</div>
                 <div className="problem-body">Independent GLP-1 clinics want to keep patients engaged but lack the operational infrastructure to do it. No SMS system. No structured check-ins. No escalation workflow. Patients fall through the cracks.</div>
                 <div className="problem-num">15,000+</div>
