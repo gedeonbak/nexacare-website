@@ -36,6 +36,20 @@ CREATE TABLE IF NOT EXISTS patients (
   next_message_date   DATE,
   notes               TEXT,
   hubspot_contact_id  VARCHAR(100),
+  -- ── A2P 10DLC / TCPA consent audit (A14) ──────────────────────────────────
+  -- Proof of SMS opt-in. The carrier reviewer requires that consent is logged;
+  -- these columns make that claim true. consent_at is the authoritative moment
+  -- of consent (Typeform submitted_at). consent_disclosure_version points at
+  -- the immutable verbatim text in src/lib/consent.ts. consent_response_token
+  -- is the Typeform response id — the authoritative respondent IP and full
+  -- answer set are retrievable from Typeform's Responses API via this token.
+  consent_given              BOOLEAN,
+  consent_at                 TIMESTAMPTZ,
+  consent_disclosure_version VARCHAR(30),
+  consent_ip                 VARCHAR(45),   -- IPv4/IPv6; best-effort (see consent.ts note)
+  consent_user_agent         TEXT,
+  consent_network_id         VARCHAR(100),  -- Typeform network identifier (not a raw IP)
+  consent_response_token     VARCHAR(100),  -- Typeform response id for audit retrieval
   created_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
   updated_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );

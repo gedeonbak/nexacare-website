@@ -30,8 +30,34 @@ export interface Patient {
   next_message_date: string | null;
   notes: string | null;
   hubspot_contact_id: string | null;
+  // ── A2P 10DLC / TCPA consent audit (A14) ───────────────────────────────────
+  consent_given: boolean | null;
+  consent_at: string | null;
+  consent_disclosure_version: string | null;
+  consent_ip: string | null;
+  consent_user_agent: string | null;
+  consent_network_id: string | null;
+  consent_response_token: string | null;
   created_at: string;
   updated_at: string;
+}
+
+/**
+ * SMS consent evidence captured at intake. Populated by the Typeform webhook
+ * (where the patient checks the consent box); optional on internal/admin
+ * enrollment paths that consent out-of-band.
+ */
+export interface ConsentRecord {
+  given: boolean | null;
+  /** Authoritative moment of consent — Typeform form_response.submitted_at (ISO). */
+  at: string | null;
+  /** Version pointer into DISCLOSURE_TEXT in src/lib/consent.ts. */
+  disclosureVersion: string;
+  ip?: string | null;
+  userAgent?: string | null;
+  networkId?: string | null;
+  /** Typeform response token — key to retrieve the authoritative record. */
+  responseToken?: string | null;
 }
 
 export interface PatientStats {
@@ -166,6 +192,8 @@ export async function createPatient(data: {
   enrollmentDate: string;
   nextMessageDate: string;
   hubspotContactId?: string;
+  /** A2P consent evidence — populated by the Typeform webhook (A14). */
+  consent?: ConsentRecord;
 }): Promise<Patient> {
   const patientId = `PT-${Date.now()}-${Math.random()
     .toString(36)
@@ -175,6 +203,8 @@ export async function createPatient(data: {
   // Last-4 of phone — never log or expose the full number
   const phoneHash = data.phoneNumber.replace(/\D/g, '').slice(-4);
 
+  const c = data.consent;
+
   const rows = await query<Patient>(
     `INSERT INTO patients (
        patient_id, clinic_id, clinic_name,
@@ -182,10 +212,14 @@ export async function createPatient(data: {
        preferred_language, enrollment_date,
        next_message_num, next_message_date,
        status, churn_risk_score, escalation_status,
-       hubspot_contact_id
+       hubspot_contact_id,
+       consent_given, consent_at, consent_disclosure_version,
+       consent_ip, consent_user_agent, consent_network_id,
+       consent_response_token
      ) VALUES (
        $1, $2, $3, $4, $5, $6, $7, $8,
-       1, $9, 'Active', 0, 'None', $10
+       1, $9, 'Active', 0, 'None', $10,
+       $11, $12, $13, $14, $15, $16, $17
      ) RETURNING *`,
     [
       patientId,
@@ -198,6 +232,13 @@ export async function createPatient(data: {
       data.enrollmentDate,
       data.nextMessageDate,
       data.hubspotContactId ?? null,
+      c?.given ?? null,
+      c?.at ?? null,
+      c?.disclosureVersion ?? null,
+      c?.ip ?? null,
+      c?.userAgent ?? null,
+      c?.networkId ?? null,
+      c?.responseToken ?? null,
     ]
   );
   return rows[0];

@@ -225,7 +225,9 @@ export default function TermsOfServicePage() {
           >
             By providing your mobile phone number and checking the opt-in box on your
             clinic&rsquo;s enrollment form, you expressly agree to receive automated SMS text
-            messages from NexaCare Management on behalf of your enrolled clinic.
+            messages from NexaCare Management on behalf of your enrolled clinic.{" "}
+            <strong>Consent to receive these messages is not a condition of any treatment,
+            purchase, or service.</strong>
           </p>
 
           {/* Quick-reference grid */}

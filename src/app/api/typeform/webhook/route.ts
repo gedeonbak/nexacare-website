@@ -26,6 +26,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHmac, timingSafeEqual } from 'crypto';
 import { createPatient } from '@/lib/patients';
 import { postSlack } from '@/lib/slack';
+import {
+  CONSENT_DISCLOSURE_VERSION,
+  extractConsent,
+  type TypeformConsentMetadata,
+} from '@/lib/consent';
 
 // Force Node.js runtime — required for `crypto` module and `pg` (via patients.ts)
 export const runtime = 'nodejs';
@@ -65,6 +70,7 @@ interface TypeformFormResponse {
   submitted_at: string;
   answers: TypeformAnswer[];
   hidden?: TypeformHidden;
+  metadata?: TypeformConsentMetadata;
 }
 
 interface TypeformWebhookPayload {
@@ -193,7 +199,14 @@ export async function POST(req: NextRequest) {
   }
 
   const { form_response } = payload;
-  const { form_id, answers = [], hidden = {} } = form_response;
+  const {
+    form_id,
+    answers = [],
+    hidden = {},
+    submitted_at,
+    token: responseToken,
+    metadata,
+  } = form_response;
 
   // ── Derive language ──────────────────────────────────────────────────────────
   const lang: 'EN' | 'ES' | 'FR' = FORM_LANGUAGE[form_id] ?? 'EN';
@@ -255,6 +268,52 @@ export async function POST(req: NextRequest) {
   }
   const normalizedPhone = rawPhone.startsWith('+') ? rawPhone : `+1${digits}`;
 
+  // ── A2P 10DLC / TCPA consent capture (A14 step 3) ────────────────────────────
+  // consent === true  → affirmative opt-in, record it
+  // consent === false → patient declined; do NOT enroll or text (compliance)
+  // consent === null  → form has no consent field yet (Step 1 audit gap) — enroll
+  //   but loudly flag. Harden to a hard reject once the checkbox is confirmed
+  //   live on all three forms (A14 step 1).
+  const consentGiven = extractConsent(answers);
+
+  if (consentGiven === false) {
+    console.warn('[typeform/webhook] Patient declined SMS consent — not enrolling. form_id:', form_id);
+    postSlack(
+      'leads',
+      [],
+      `🚫 *Enrollment blocked — SMS consent declined*\nName: ${firstName.trim()}\nLanguage: ${lang}\nThe patient submitted the intake form but did not check the SMS consent box. No CarePath messages will be sent. Coordinator: follow up out-of-band if appropriate.`,
+    ).catch((err: unknown) =>
+      console.error('[typeform/webhook] Slack alert failed:', err instanceof Error ? err.message : err),
+    );
+    return NextResponse.json({ ok: false, error: 'SMS consent not granted', form_id });
+  }
+
+  if (consentGiven === null) {
+    console.warn(
+      '[typeform/webhook] No consent field found in submission — AUDIT GAP. form_id:',
+      form_id,
+    );
+    postSlack(
+      'leads',
+      [],
+      `⚠️ *Consent field missing on Typeform (${lang})*\nForm ${form_id} submitted without a detectable consent checkbox answer. A2P audit requires an explicit opt-in field on every form (A14 step 1). Enrolling for now; add the consent checkbox before resubmission.`,
+    ).catch(() => {});
+  }
+
+  // Typeform webhooks do not include the respondent's raw IP. consent_ip stays
+  // best-effort (null unless a future on-domain embed supplies it); the
+  // authoritative IP + full answers are retrievable from Typeform's Responses
+  // API via responseToken at audit time.
+  const consent = {
+    given: consentGiven,
+    at: submitted_at ?? null,
+    disclosureVersion: CONSENT_DISCLOSURE_VERSION,
+    ip: null as string | null,
+    userAgent: metadata?.user_agent ?? null,
+    networkId: metadata?.network_id ?? null,
+    responseToken: responseToken ?? null,
+  };
+
   // ── Enroll patient in RDS ────────────────────────────────────────────────────
   const today = new Date().toISOString().split('T')[0];
 
@@ -267,6 +326,7 @@ export async function POST(req: NextRequest) {
       preferredLanguage: lang,
       enrollmentDate:    today,
       nextMessageDate:   today,
+      consent,
     });
 
     // Fire-and-forget Slack notification — never blocks response
