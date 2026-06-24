@@ -186,7 +186,7 @@ export default function PrivacyPolicyPage() {
             Patients provide explicit written consent by checking a mandatory opt-in checkbox
             on their clinic&rsquo;s enrollment form before receiving any messages. No messages
             are sent without this consent. Consent to receive SMS messages is{" "}
-            <strong>not a condition of any treatment, purchase, or service</strong>.
+            <strong>not a condition of treatment or enrollment in any clinical service</strong>.
           </P>
 
           <Label>Message Frequency</Label>
