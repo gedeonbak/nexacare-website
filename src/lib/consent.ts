@@ -15,8 +15,10 @@
 // in place — versions are immutable so a stored version always reproduces the
 // exact text a patient saw), re-sync the three Typeform checkboxes, and resubmit.
 //
-// ES/FR are Riley's functional translations — PENDING Morgan native-speaker
-// review before they go live on the ES/FR Typeforms (R15 §9).
+// ES/FR are Morgan-approved 2026-06-24 (M21, Path 3 accepted by Gedeon). ES
+// carries Morgan's one refinement vs Riley's draft: "surtido" → "resurtido"
+// (US-Latino standard for prescription refill). FR unchanged from R15 §4.
+// Version stays v2026-06-24 — the ES edit is editorial, not regulatory.
 
 /**
  * Version string stamped onto every consent record at submission time. Keep it
@@ -38,9 +40,9 @@ type Lang = 'EN' | 'ES' | 'FR';
 export const DISCLOSURE_TEXT: Record<string, Record<Lang, string>> = {
   'v2026-06-24': {
     EN: `By checking this box, I agree to receive recurring SMS messages from NexaCare Management about my clinic's CarePath wellness program, including check-in reminders, refill reminders, and program updates. Message frequency varies; up to 20 messages over 90 days. Msg & data rates may apply. Reply STOP to unsubscribe, HELP for help. Consent is not a condition of treatment or enrollment in any clinical service. View our Privacy Policy at https://www.nexacaremanagement.com/privacy-policy and Terms of Service at https://www.nexacaremanagement.com/terms-of-service.`,
-    // PENDING Morgan native-speaker review (R15 §9) before ES Typeform deploy.
-    ES: `Al marcar esta casilla, acepto recibir mensajes SMS recurrentes de NexaCare Management sobre el programa de bienestar CarePath de mi clínica, incluyendo recordatorios de seguimiento, recordatorios de surtido de medicamentos y actualizaciones del programa. La frecuencia de los mensajes varía; hasta 20 mensajes en 90 días. Pueden aplicarse tarifas de mensaje y datos. Responda STOP para cancelar la suscripción o HELP para obtener ayuda. El consentimiento no es una condición para recibir tratamiento ni para inscribirse en ningún servicio clínico. Consulte nuestra Política de Privacidad en https://www.nexacaremanagement.com/privacy-policy y los Términos de Servicio en https://www.nexacaremanagement.com/terms-of-service.`,
-    // PENDING Morgan native-speaker review (R15 §9) before FR Typeform deploy.
+    // Morgan-approved 2026-06-24 (M21): "surtido" → "resurtido" refinement applied.
+    ES: `Al marcar esta casilla, acepto recibir mensajes SMS recurrentes de NexaCare Management sobre el programa de bienestar CarePath de mi clínica, incluyendo recordatorios de seguimiento, recordatorios de resurtido de medicamentos y actualizaciones del programa. La frecuencia de los mensajes varía; hasta 20 mensajes en 90 días. Pueden aplicarse tarifas de mensaje y datos. Responda STOP para cancelar la suscripción o HELP para obtener ayuda. El consentimiento no es una condición para recibir tratamiento ni para inscribirse en ningún servicio clínico. Consulte nuestra Política de Privacidad en https://www.nexacaremanagement.com/privacy-policy y los Términos de Servicio en https://www.nexacaremanagement.com/terms-of-service.`,
+    // Morgan-approved 2026-06-24 (M21): unchanged from Riley R15 §4.
     FR: `En cochant cette case, j'accepte de recevoir des messages SMS récurrents de NexaCare Management concernant le programme de bien-être CarePath de ma clinique, y compris des rappels de suivi, des rappels de renouvellement d'ordonnance et des mises à jour du programme. La fréquence des messages varie; jusqu'à 20 messages sur 90 jours. Des frais de messagerie et de données peuvent s'appliquer. Répondez STOP pour vous désabonner ou HELP pour obtenir de l'aide. Le consentement n'est pas une condition de traitement ni d'inscription à un service clinique. Consultez notre Politique de Confidentialité à https://www.nexacaremanagement.com/privacy-policy et nos Conditions d'Utilisation à https://www.nexacaremanagement.com/terms-of-service.`,
   },
 };
