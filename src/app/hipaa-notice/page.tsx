@@ -36,11 +36,11 @@ export default function HipaaNoticePage() {
           <p className="text-[15px] leading-relaxed" style={{ color: "#555" }}>
             This page is being updated. Contact{" "}
             <a
-              href="mailto:hello@nexacaremanagement.com"
+              href="mailto:contact@nexacaremanagement.com"
               className="underline transition-colors"
               style={{ color: "#27AAE1" }}
             >
-              hello@nexacaremanagement.com
+              contact@nexacaremanagement.com
             </a>{" "}
             for our current hipaa notice practices.
           </p>
