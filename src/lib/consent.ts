@@ -15,17 +15,19 @@
 // in place — versions are immutable so a stored version always reproduces the
 // exact text a patient saw), re-sync the three Typeform checkboxes, and resubmit.
 //
-// This is the CANONICAL TARGET text the live Typeforms MUST be published to:
-// EN = Riley's R15 §4; ES/FR = Morgan's M21 (ES has "resurtido"). All 9 CTIA
-// elements incl. the non-condition statement + full https URLs.
+// These strings MIRROR THE LIVE TYPEFORM FORMS, curl-verified on 2026-06-24
+// AFTER Gedeon published the edit. window.rendererData on g2WVfC0n / IpwsVhZw /
+// UbYJjIEG confirms all three carry CTIA element 9 ("consent not a condition")
+// + full https URLs. EN live == Riley R15 §4 verbatim; ES/FR live are compliant
+// paraphrases (all 9 elements, not M21-verbatim — live forms are the agreed
+// source of truth per Gedeon). The live Typeform is authoritative; this is the
+// audit mirror so disclosure_version reproduces the text patients saw.
 //
-// ⚠️ 2026-06-24 — the LIVE forms do NOT match this yet. Verified by curl of
-// window.rendererData on g2WVfC0n / IpwsVhZw / UbYJjIEG: the published consent
-// fields still carry the pre-fix wording, MISSING the non-condition element and
-// using bare-domain URLs. The corrected screenshots reviewed earlier were the
-// Typeform editor preview, never published. Gedeon must PUBLISH these strings to
-// the live forms; Alex must then re-curl to confirm before A14 can be called
-// green. Do not treat editor preview as proof of live state.
+// Version stays v2026-06-24: no patient has consented yet (campaign paused,
+// webhooks unwired), so the token binds cleanly to this final corrected text.
+// LESSON LEARNED: editor preview != live. Always re-curl window.rendererData —
+// an earlier GREEN was wrongly called off a preview screenshot that was never
+// published.
 
 /**
  * Version string stamped onto every consent record at submission time. Keep it
@@ -47,10 +49,10 @@ type Lang = 'EN' | 'ES' | 'FR';
 export const DISCLOSURE_TEXT: Record<string, Record<Lang, string>> = {
   'v2026-06-24': {
     EN: `By checking this box, I agree to receive recurring SMS messages from NexaCare Management about my clinic's CarePath wellness program, including check-in reminders, refill reminders, and program updates. Message frequency varies; up to 20 messages over 90 days. Msg & data rates may apply. Reply STOP to unsubscribe, HELP for help. Consent is not a condition of treatment or enrollment in any clinical service. View our Privacy Policy at https://www.nexacaremanagement.com/privacy-policy and Terms of Service at https://www.nexacaremanagement.com/terms-of-service.`,
-    // TARGET (Morgan M21): "resurtido" refinement applied. NOT yet live (see header).
-    ES: `Al marcar esta casilla, acepto recibir mensajes SMS recurrentes de NexaCare Management sobre el programa de bienestar CarePath de mi clínica, incluyendo recordatorios de seguimiento, recordatorios de resurtido de medicamentos y actualizaciones del programa. La frecuencia de los mensajes varía; hasta 20 mensajes en 90 días. Pueden aplicarse tarifas de mensaje y datos. Responda STOP para cancelar la suscripción o HELP para obtener ayuda. El consentimiento no es una condición para recibir tratamiento ni para inscribirse en ningún servicio clínico. Consulte nuestra Política de Privacidad en https://www.nexacaremanagement.com/privacy-policy y los Términos de Servicio en https://www.nexacaremanagement.com/terms-of-service.`,
-    // TARGET (Morgan M21 = Riley R15 §4 FR). NOT yet live (see header).
-    FR: `En cochant cette case, j'accepte de recevoir des messages SMS récurrents de NexaCare Management concernant le programme de bien-être CarePath de ma clinique, y compris des rappels de suivi, des rappels de renouvellement d'ordonnance et des mises à jour du programme. La fréquence des messages varie; jusqu'à 20 messages sur 90 jours. Des frais de messagerie et de données peuvent s'appliquer. Répondez STOP pour vous désabonner ou HELP pour obtenir de l'aide. Le consentement n'est pas une condition de traitement ni d'inscription à un service clinique. Consultez notre Politique de Confidentialité à https://www.nexacaremanagement.com/privacy-policy et nos Conditions d'Utilisation à https://www.nexacaremanagement.com/terms-of-service.`,
+    // LIVE (form IpwsVhZw), curl-verified 2026-06-24. Element 9 present.
+    ES: `Al marcar esta casilla, autorizo la recepción de mensajes SMS periódicos de NexaCare Management acerca del programa CarePath de mi clínica. Los mensajes pueden incluir recordatorios, avisos de resurtido de medicamentos y actualizaciones de bienestar. La frecuencia de mensajes puede variar; hasta 20 mensajes en 90 días. Se pueden aplicar tarifas de mensajes y datos según su proveedor. Responda STOP para cancelar la suscripción o HELP para obtener ayuda en cualquier momento. Su consentimiento no es condición para recibir tratamiento ni servicios clínicos. Para más información, consulte nuestra Política de Privacidad en https://www.nexacaremanagement.com/privacy-policy y nuestros Términos de Servicio en https://www.nexacaremanagement.com/terms-of-service.`,
+    // LIVE (form UbYJjIEG), curl-verified 2026-06-24. Element 9 present ("n'est pas une condition requise").
+    FR: `En cochant cette case, j'accepte de recevoir des SMS récurrents de NexaCare Management dans le cadre du programme de bien-être CarePath de ma clinique, y compris des messages de suivi, des rappels de renouvellement d'ordonnance et d'autres communications liées au programme. La fréquence des messages varie (jusqu'à 20 messages sur 90 jours). Des frais de messagerie et de données peuvent s'appliquer. Répondez STOP pour vous désabonner ou HELP pour obtenir de l'aide. Ce consentement n'est pas une condition requise pour un soin ou un service clinique. Consultez notre Politique de Confidentialité (https://www.nexacaremanagement.com/privacy-policy) et nos Conditions d'Utilisation (https://www.nexacaremanagement.com/terms-of-service).`,
   },
 };
 
