@@ -206,10 +206,10 @@ export default function PrivacyPolicyPage() {
           <P>
             Reply <strong>HELP</strong> to any message, or contact us at{" "}
             <a
-              href="mailto:hello@nexacaremanagement.com"
+              href="mailto:contact@nexacaremanagement.com"
               style={{ color: "#27AAE1", textDecoration: "underline" }}
             >
-              hello@nexacaremanagement.com
+              contact@nexacaremanagement.com
             </a>
             .
           </P>
@@ -300,10 +300,10 @@ export default function PrivacyPolicyPage() {
             Atlanta, GA 30339
             <br />
             <a
-              href="mailto:hello@nexacaremanagement.com"
+              href="mailto:contact@nexacaremanagement.com"
               style={{ color: "#27AAE1", textDecoration: "underline" }}
             >
-              hello@nexacaremanagement.com
+              contact@nexacaremanagement.com
             </a>
           </div>
         </Section>

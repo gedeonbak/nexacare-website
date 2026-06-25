@@ -58,13 +58,6 @@ export default function Footer() {
             {/* Emails */}
             <div className="space-y-2">
               <a
-                href="mailto:hello@nexacaremanagement.com"
-                className="block text-[13px] transition-colors hover:text-white"
-                style={{ color: "#9ca3af" }}
-              >
-                hello@nexacaremanagement.com
-              </a>
-              <a
                 href="mailto:contact@nexacaremanagement.com"
                 className="block text-[13px] transition-colors hover:text-white"
                 style={{ color: "#9ca3af" }}

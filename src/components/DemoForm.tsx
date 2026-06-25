@@ -445,11 +445,11 @@ export default function DemoForm() {
           <p className="mt-4 text-center text-[12px]" style={{ color: "#9ca3af" }}>
             Prefer email? Reach us at{" "}
             <a
-              href="mailto:hello@nexacaremanagement.com"
+              href="mailto:contact@nexacaremanagement.com"
               className="underline transition-colors hover:text-sky"
               style={{ color: "#27AAE1" }}
             >
-              hello@nexacaremanagement.com
+              contact@nexacaremanagement.com
             </a>
           </p>
 

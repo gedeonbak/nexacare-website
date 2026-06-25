@@ -270,10 +270,10 @@ export default function TermsOfServicePage() {
                 <>
                   Reply <strong style={{ color: "#ffffff" }}>HELP</strong> or email{" "}
                   <a
-                    href="mailto:hello@nexacaremanagement.com"
+                    href="mailto:contact@nexacaremanagement.com"
                     style={{ color: "#27AAE1", textDecoration: "underline" }}
                   >
-                    hello@nexacaremanagement.com
+                    contact@nexacaremanagement.com
                   </a>
                 </>
               }
@@ -393,10 +393,10 @@ export default function TermsOfServicePage() {
             Atlanta, GA 30339
             <br />
             <a
-              href="mailto:hello@nexacaremanagement.com"
+              href="mailto:contact@nexacaremanagement.com"
               style={{ color: "#27AAE1", textDecoration: "underline" }}
             >
-              hello@nexacaremanagement.com
+              contact@nexacaremanagement.com
             </a>
             <br />
             (770) 647-8135

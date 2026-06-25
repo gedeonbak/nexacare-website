@@ -57,7 +57,7 @@ export default function EmployersPage() {
       setStatus('success');
     } catch {
       setStatus('error');
-      setErrorMessage('Something went wrong. Please email hello@nexacaremanagement.com directly.');
+      setErrorMessage('Something went wrong. Please email contact@nexacaremanagement.com directly.');
     }
   };
 
@@ -1074,7 +1074,7 @@ export default function EmployersPage() {
               {' · '}
               <a href="/terms-of-service">Terms of Service</a>
               {' · '}
-              <a href="mailto:hello@nexacaremanagement.com">hello@nexacaremanagement.com</a>
+              <a href="mailto:contact@nexacaremanagement.com">contact@nexacaremanagement.com</a>
             </div>
           </div>
 
