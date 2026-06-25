@@ -88,6 +88,21 @@ export default function Nav() {
               style={{ objectFit: "contain" }}
             />
           )}
+          {/* Tagline (desktop only) — M18 */}
+          <span
+            className="hidden md:block"
+            style={{
+              fontSize: "10px",
+              color: "#27AAE1",
+              fontWeight: 400,
+              letterSpacing: "0.06em",
+              opacity: 0.9,
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              marginTop: "2px",
+            }}
+          >
+            The engagement layer behind GLP-1
+          </span>
         </Link>
 
         {/* ── CENTER — Desktop links ── */}

@@ -714,8 +714,10 @@ export default async function Home() {
                 className="max-w-2xl mx-auto"
                 style={{ fontSize: "16px", lineHeight: 1.75, color: "#555" }}
               >
-                Real-world GLP-1 adherence at 12 months without engagement
-                infrastructure runs below 50%. CarePath is designed to change that
+                Real-world GLP-1 adherence collapses without engagement
+                infrastructure — nearly two-thirds of patients discontinue within
+                the first year (Rodriguez et al., JAMA Network Open, 2025).
+                CarePath is designed to change that
                 — 20 structured messages across 90 days, with risk triggers that
                 fire before a patient churns.
               </p>

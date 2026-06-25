@@ -732,7 +732,7 @@ export default function EmployersPage() {
                 <em>Most of it is wasted.</em>
               </h1>
               <p className="emp-hero-body">
-                Half of employees who start a GLP-1 program quit within a year. The medication cost stays. The health benefit disappears. NexaCare builds the operational infrastructure that keeps patients on program — so your investment actually works.
+                Nearly two-thirds of patients who start a GLP-1 discontinue within the first year (Rodriguez et al., JAMA Network Open, 2025). The medication cost stays. The health benefit disappears. NexaCare builds the operational infrastructure that keeps patients on program — so your investment actually works.
               </p>
               <div className="emp-cta-row">
                 <button className="btn-primary" onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}>
@@ -747,7 +747,7 @@ export default function EmployersPage() {
             <div className="emp-evidence">
               <div className="emp-evidence-item">
                 <div className="emp-evidence-source">Rodriguez et al. · JAMA Network Open 2025</div>
-                <div className="emp-evidence-body"><span className="emp-evidence-num">~50%</span> of GLP-1 patients discontinue within 12 months without structured engagement support</div>
+                <div className="emp-evidence-body"><span className="emp-evidence-num">64.8%</span> of adults on a GLP-1 for obesity discontinue within the first year</div>
               </div>
               <div className="emp-evidence-item">
                 <div className="emp-evidence-source">EBRI Actuarial Analysis 2025</div>
@@ -775,9 +775,9 @@ export default function EmployersPage() {
               <div className="problem-card">
                 <div className="problem-icon"><TrendingDown size={24} strokeWidth={1.75} /></div>
                 <div className="problem-title">High dropout, zero recovery</div>
-                <div className="problem-body">Real-world GLP-1 adherence at 12 months runs well below clinical trial results. Without behavioral support and check-ins, most patients discontinue in the first 90 days.</div>
-                <div className="problem-num">~50%</div>
-                <div className="problem-num-label">12-month discontinuation rate</div>
+                <div className="problem-body">Real-world GLP-1 adherence runs well below clinical-trial results, and dropout risk is highest in the first 90 days — the window structured engagement is built to cover.</div>
+                <div className="problem-num">64.8%</div>
+                <div className="problem-num-label">1-year discontinuation · Rodriguez et al., 2025</div>
               </div>
               <div className="problem-card">
                 <div className="problem-icon"><Coins size={24} strokeWidth={1.75} /></div>
@@ -845,8 +845,8 @@ export default function EmployersPage() {
                   <span className="roi-val red">$240,000</span>
                 </div>
                 <div className="roi-row">
-                  <span className="roi-label">Without support: ~50% quit</span>
-                  <span className="roi-val red">$120,000 wasted</span>
+                  <span className="roi-label">Without support: ~65% discontinue</span>
+                  <span className="roi-val red">$155,000 wasted</span>
                 </div>
                 <div className="roi-divider" />
                 <div className="roi-row">
