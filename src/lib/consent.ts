@@ -15,10 +15,13 @@
 // in place — versions are immutable so a stored version always reproduces the
 // exact text a patient saw), re-sync the three Typeform checkboxes, and resubmit.
 //
-// ES/FR are Morgan-approved 2026-06-24 (M21, Path 3 accepted by Gedeon). ES
-// carries Morgan's one refinement vs Riley's draft: "surtido" → "resurtido"
-// (US-Latino standard for prescription refill). FR unchanged from R15 §4.
-// Version stays v2026-06-24 — the ES edit is editorial, not regulatory.
+// EN is Riley's R15 §4 canonical and is deployed verbatim on form g2WVfC0n.
+// ES/FR below are TRANSCRIBED FROM THE LIVE TYPEFORM DEPLOY (2026-06-24) so this
+// source-of-truth matches what patients actually consented to. They are faithful
+// paraphrases of Morgan's M21 draft (all 9 CTIA elements preserved) — pending
+// Morgan's blessing of the as-deployed wording for the A2P evidence pack. The
+// live Typeform is the authoritative rendered text. Version stays v2026-06-24
+// per Riley (translation wording is editorial, not a regulatory change).
 
 /**
  * Version string stamped onto every consent record at submission time. Keep it
@@ -40,10 +43,13 @@ type Lang = 'EN' | 'ES' | 'FR';
 export const DISCLOSURE_TEXT: Record<string, Record<Lang, string>> = {
   'v2026-06-24': {
     EN: `By checking this box, I agree to receive recurring SMS messages from NexaCare Management about my clinic's CarePath wellness program, including check-in reminders, refill reminders, and program updates. Message frequency varies; up to 20 messages over 90 days. Msg & data rates may apply. Reply STOP to unsubscribe, HELP for help. Consent is not a condition of treatment or enrollment in any clinical service. View our Privacy Policy at https://www.nexacaremanagement.com/privacy-policy and Terms of Service at https://www.nexacaremanagement.com/terms-of-service.`,
-    // Morgan-approved 2026-06-24 (M21): "surtido" → "resurtido" refinement applied.
-    ES: `Al marcar esta casilla, acepto recibir mensajes SMS recurrentes de NexaCare Management sobre el programa de bienestar CarePath de mi clínica, incluyendo recordatorios de seguimiento, recordatorios de resurtido de medicamentos y actualizaciones del programa. La frecuencia de los mensajes varía; hasta 20 mensajes en 90 días. Pueden aplicarse tarifas de mensaje y datos. Responda STOP para cancelar la suscripción o HELP para obtener ayuda. El consentimiento no es una condición para recibir tratamiento ni para inscribirse en ningún servicio clínico. Consulte nuestra Política de Privacidad en https://www.nexacaremanagement.com/privacy-policy y los Términos de Servicio en https://www.nexacaremanagement.com/terms-of-service.`,
-    // Morgan-approved 2026-06-24 (M21): unchanged from Riley R15 §4.
-    FR: `En cochant cette case, j'accepte de recevoir des messages SMS récurrents de NexaCare Management concernant le programme de bien-être CarePath de ma clinique, y compris des rappels de suivi, des rappels de renouvellement d'ordonnance et des mises à jour du programme. La fréquence des messages varie; jusqu'à 20 messages sur 90 jours. Des frais de messagerie et de données peuvent s'appliquer. Répondez STOP pour vous désabonner ou HELP pour obtenir de l'aide. Le consentement n'est pas une condition de traitement ni d'inscription à un service clinique. Consultez notre Politique de Confidentialité à https://www.nexacaremanagement.com/privacy-policy et nos Conditions d'Utilisation à https://www.nexacaremanagement.com/terms-of-service.`,
+    // Transcribed from the LIVE Typeform deploy (IpwsVhZw) 2026-06-24 — this is
+    // the wording patients actually saw/consented to. A competent paraphrase of
+    // Morgan's M21 draft (all 9 CTIA elements preserved); pending Morgan blessing
+    // for the A2P evidence pack. The live Typeform remains the authoritative text.
+    ES: `Al marcar esta casilla, autorizo la recepción de mensajes SMS periódicos de NexaCare Management acerca del programa CarePath de mi clínica. Los mensajes pueden incluir recordatorios, avisos de resurtido de medicamentos y actualizaciones de bienestar. La frecuencia de mensajes puede variar; hasta 20 mensajes en 90 días. Se pueden aplicar tarifas de mensajes y datos según su proveedor. Responda STOP para cancelar la suscripción o HELP para obtener ayuda en cualquier momento. Su consentimiento no es condición para recibir tratamiento ni servicios clínicos. Para más información, consulte nuestra Política de Privacidad en https://www.nexacaremanagement.com/privacy-policy y nuestros Términos de Servicio en https://www.nexacaremanagement.com/terms-of-service.`,
+    // Transcribed from the LIVE Typeform deploy (UbYJjIEG) 2026-06-24 — see ES note.
+    FR: `En cochant cette case, j'accepte de recevoir des SMS récurrents de NexaCare Management dans le cadre du programme de bien-être CarePath de ma clinique, y compris des messages de suivi, des rappels de renouvellement d'ordonnance et d'autres communications liées au programme. La fréquence des messages varie (jusqu'à 20 messages sur 90 jours). Des frais de messagerie et de données peuvent s'appliquer. Répondez STOP pour vous désabonner ou HELP pour obtenir de l'aide. Ce consentement n'est pas une condition requise pour un soin ou un service clinique. Consultez notre Politique de Confidentialité (https://www.nexacaremanagement.com/privacy-policy) et nos Conditions d'Utilisation (https://www.nexacaremanagement.com/terms-of-service).`,
   },
 };
 
