@@ -79,10 +79,12 @@ main {
 .hero-content-row {
   display: flex;
   align-items: center;
-  gap: 64px;
+  gap: 48px;
 }
-.hero-left  { flex: 1; max-width: 580px; }
-.hero-right { flex: 1; max-width: 520px; }
+/* hero-left widened (Option C) so the H1 sits on one line; hero-right trimmed
+   so the two-column row still fits ~1280px laptops without overflow. */
+.hero-left  { flex: 1; max-width: 640px; }
+.hero-right { flex: 1; max-width: 500px; }
 .hero-btn-primary  { transition: background 0.2s, transform 0.15s; }
 .hero-btn-primary:hover  {
   background: #3cc0f5 !important;

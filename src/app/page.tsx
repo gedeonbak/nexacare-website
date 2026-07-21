@@ -269,17 +269,17 @@ export default async function Home() {
               <h1
                 style={{
                   fontFamily: "'Playfair Display', Georgia, serif",
-                  fontSize: "clamp(44px, 5.5vw, 72px)",
-                  lineHeight: 1.0,
+                  fontSize: "clamp(40px, 3.9vw, 46px)",
+                  lineHeight: 1.04,
                   letterSpacing: "-0.03em",
                   fontWeight: 900,
                   marginBottom: "28px",
                   color: "white",
+                  textWrap: "balance",
                 }}
               >
-                Your clinic&apos;s GLP-1
-                <br />
-                program.{" "}
+                Your clinic&apos;s{" "}
+                <span style={{ whiteSpace: "nowrap" }}>GLP-1</span> program.
                 <em
                   style={{
                     fontStyle: "italic",
